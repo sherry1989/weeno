@@ -60,22 +60,26 @@ public class NoteDatabase extends SQLiteOpenHelper {
                 + KeysColumns.KEY_ID + " TEXT NOT NULL,"
                 + KeysColumns.KEY_NAME + " TEXT NOT NULL,"
                 + KeysColumns.KEY_SEARCH_TIME + " INTEGER NOT NULL,"
-                + KeysColumns.KEY_STATE + " INTEGER NOT NULL,"
+                + KeysColumns.KEY_STATE + " TEXT NOT NULL,"
                 + "UNIQUE (" + KeysColumns.KEY_ID + ") ON CONFLICT REPLACE)");
         
         db.execSQL("CREATE TABLE " + Tables.IMAGES + " ("
                 + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + Keys.KEY_ID + " TEXT " + References.KEY_ID + ","
+                + ImagesColumns.IMAGE_ID + " TEXT NOT NULL,"
                 + ImagesColumns.IMAGE_URL + " TEXT NOT NULL,"
-                + ImagesColumns.IMAGE_STATE + " INTEGER NOT NULL,");
+                + ImagesColumns.IMAGE_STATE + " TEXT NOT NULL,"
+                + "UNIQUE (" + ImagesColumns.IMAGE_ID + ") ON CONFLICT REPLACE)");
         
         db.execSQL("CREATE TABLE " + Tables.WEBS + " ("
                 + BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + Keys.KEY_ID + " TEXT " + References.KEY_ID + ","
+                + WebsColumns.WEB_ID + " TEXT NOT NULL,"
                 + WebsColumns.WEB_TITLE + " TEXT NOT NULL,"
                 + WebsColumns.WEB_CONTENT + " TEXT NOT NULL,"
                 + WebsColumns.WEB_URL + " TEXT NOT NULL,"
-                + WebsColumns.WEB_STATE + " INTEGER NOT NULL,");
+                + WebsColumns.WEB_STATE + " TEXT NOT NULL,"
+                + "UNIQUE (" + WebsColumns.WEB_ID + ") ON CONFLICT REPLACE)");
     }
 
     @Override

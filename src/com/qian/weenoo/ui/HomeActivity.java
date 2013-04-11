@@ -4,6 +4,7 @@ import android.accounts.Account;
 import android.annotation.TargetApi;
 import android.app.SearchManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SyncStatusObserver;
 import android.os.AsyncTask;
@@ -17,19 +18,26 @@ import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
+import com.google.android.apps.iosched.calendar.SessionAlarmService;
 import com.google.android.apps.iosched.util.HelpUtils;
 import com.google.android.apps.iosched.util.UIUtils;
 
 import com.qian.weenoo.BuildConfig;
 import com.qian.weenoo.Config;
 import com.qian.weenoo.R;
+import com.qian.weenoo.service.KeyAddService;
 import com.qian.weenoo.tracking.EasyTracker;
 
 import static com.google.android.apps.iosched.util.LogUtils.LOGD;
@@ -39,33 +47,38 @@ import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
 
 /**
  * The landing screen for the app, once the user has logged in.
- *
- * <p>This activity uses different layouts to present its various fragments, depending on the
- * device configuration. {@link KeyFragment}, {@link NoteFragment}, and
- * {@link WebPageFragment} are always available to the user. {@link WhatsOnFragment} is
- * always available on tablets and phones in portrait, but is hidden on phones held in landscape.
- *
- * <p>On phone-size screens, the three fragments are represented by {@link ActionBar} tabs, and
- * can are held inside a {@link ViewPager} to allow horizontal swiping.
- *
- * <p>On tablets, the three fragments are always visible and are presented as either three panes
- * (landscape) or a grid (portrait).
+ * 
+ * <p>
+ * This activity uses different layouts to present its various fragments,
+ * depending on the device configuration. {@link KeyFragment},
+ * {@link NoteFragment}, and {@link WebPageFragment} are always available to the
+ * user. {@link WhatsOnFragment} is always available on tablets and phones in
+ * portrait, but is hidden on phones held in landscape.
+ * 
+ * <p>
+ * On phone-size screens, the three fragments are represented by
+ * {@link ActionBar} tabs, and can are held inside a {@link ViewPager} to allow
+ * horizontal swiping.
+ * 
+ * <p>
+ * On tablets, the three fragments are always visible and are presented as
+ * either three panes (landscape) or a grid (portrait).
  */
-public class HomeActivity extends BaseActivity implements
-        ActionBar.TabListener,
+public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
         ViewPager.OnPageChangeListener {
 
     private static final String TAG = makeLogTag(HomeActivity.class);
 
-    private Object mSyncObserverHandle;
+    private Object              mSyncObserverHandle;
 
-    private KeyFragment mKeyFragment;
-    private NoteFragment mNoteFragment;
-    private WebPageFragment mWebPageFragment;
+    private KeyFragment         mKeyFragment;
+    private NoteFragment        mNoteFragment;
+    private WebPageFragment     mWebPageFragment;
 
-    private ViewPager mViewPager;
-    private Menu mOptionsMenu;
-    private AsyncTask<Void, Void, Void> mGCMRegisterTask;
+    private ViewPager           mViewPager;
+    private Menu                mOptionsMenu;
+
+    // private AsyncTask<Void, Void, Void> mGCMRegisterTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,28 +99,22 @@ public class HomeActivity extends BaseActivity implements
             // Phone setup
             mViewPager.setAdapter(new HomePagerAdapter(getSupportFragmentManager()));
             mViewPager.setOnPageChangeListener(this);
-//            mViewPager.setPageMarginDrawable(R.drawable.grey_border_inset_lr);
-            mViewPager.setPageMargin(getResources()
-                    .getDimensionPixelSize(R.dimen.page_margin_width));
+            // mViewPager.setPageMarginDrawable(R.drawable.grey_border_inset_lr);
+            mViewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.page_margin_width));
 
             final ActionBar actionBar = getSupportActionBar();
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+            actionBar.addTab(actionBar.newTab().setText(R.string.title_key).setTabListener(this));
+            actionBar.addTab(actionBar.newTab().setText(R.string.title_note).setTabListener(this));
             actionBar.addTab(actionBar.newTab()
-                    .setText(R.string.title_key)
-                    .setTabListener(this));
-            actionBar.addTab(actionBar.newTab()
-                    .setText(R.string.title_note)
-                    .setTabListener(this));
-            actionBar.addTab(actionBar.newTab()
-                    .setText(R.string.title_webpage)
-                    .setTabListener(this));
+                                      .setText(R.string.title_webpage)
+                                      .setTabListener(this));
 
             homeScreenLabel = getString(R.string.title_key);
 
         } else {
             mNoteFragment = (NoteFragment) fm.findFragmentById(R.id.fragment_note);
-            mKeyFragment = (KeyFragment) fm.findFragmentById(
-                    R.id.fragment_key);
+            mKeyFragment = (KeyFragment) fm.findFragmentById(R.id.fragment_key);
             mWebPageFragment = (WebPageFragment) fm.findFragmentById(R.id.fragment_webpage);
 
             homeScreenLabel = "Home";
@@ -119,71 +126,71 @@ public class HomeActivity extends BaseActivity implements
 
         // Sync data on load
         if (savedInstanceState == null) {
-//            triggerRefresh();
-//            registerGCMClient();
+            // triggerRefresh();
+            // registerGCMClient();
         }
     }
 
-//    private void registerGCMClient() {
-//        GCMRegistrar.checkDevice(this);
-//        if (BuildConfig.DEBUG) {
-//            GCMRegistrar.checkManifest(this);
-//        }
-//
-//        final String regId = GCMRegistrar.getRegistrationId(this);
-//
-//        if (TextUtils.isEmpty(regId)) {
-//            // Automatically registers application on startup.
-//            GCMRegistrar.register(this, Config.GCM_SENDER_ID);
-//
-//        } else {
-//            // Device is already registered on GCM, check server.
-//            if (GCMRegistrar.isRegisteredOnServer(this)) {
-//                // Skips registration
-//                LOGI(TAG, "Already registered on the GCM server");
-//
-//            } else {
-//                // Try to register again, but not on the UI thread.
-//                // It's also necessary to cancel the task in onDestroy().
-//                mGCMRegisterTask = new AsyncTask<Void, Void, Void>() {
-//                    @Override
-//                    protected Void doInBackground(Void... params) {
-//                        boolean registered = ServerUtilities.register(HomeActivity.this, regId);
-//                        if (!registered) {
-//                            // At this point all attempts to register with the app
-//                            // server failed, so we need to unregister the device
-//                            // from GCM - the app will try to register again when
-//                            // it is restarted. Note that GCM will send an
-//                            // unregistered callback upon completion, but
-//                            // GCMIntentService.onUnregistered() will ignore it.
-//                            GCMRegistrar.unregister(HomeActivity.this);
-//                        }
-//                        return null;
-//                    }
-//
-//                    @Override
-//                    protected void onPostExecute(Void result) {
-//                        mGCMRegisterTask = null;
-//                    }
-//                };
-//                mGCMRegisterTask.execute(null, null, null);
-//            }
-//        }
-//    }
+    // private void registerGCMClient() {
+    // GCMRegistrar.checkDevice(this);
+    // if (BuildConfig.DEBUG) {
+    // GCMRegistrar.checkManifest(this);
+    // }
+    //
+    // final String regId = GCMRegistrar.getRegistrationId(this);
+    //
+    // if (TextUtils.isEmpty(regId)) {
+    // // Automatically registers application on startup.
+    // GCMRegistrar.register(this, Config.GCM_SENDER_ID);
+    //
+    // } else {
+    // // Device is already registered on GCM, check server.
+    // if (GCMRegistrar.isRegisteredOnServer(this)) {
+    // // Skips registration
+    // LOGI(TAG, "Already registered on the GCM server");
+    //
+    // } else {
+    // // Try to register again, but not on the UI thread.
+    // // It's also necessary to cancel the task in onDestroy().
+    // mGCMRegisterTask = new AsyncTask<Void, Void, Void>() {
+    // @Override
+    // protected Void doInBackground(Void... params) {
+    // boolean registered = ServerUtilities.register(HomeActivity.this, regId);
+    // if (!registered) {
+    // // At this point all attempts to register with the app
+    // // server failed, so we need to unregister the device
+    // // from GCM - the app will try to register again when
+    // // it is restarted. Note that GCM will send an
+    // // unregistered callback upon completion, but
+    // // GCMIntentService.onUnregistered() will ignore it.
+    // GCMRegistrar.unregister(HomeActivity.this);
+    // }
+    // return null;
+    // }
+    //
+    // @Override
+    // protected void onPostExecute(Void result) {
+    // mGCMRegisterTask = null;
+    // }
+    // };
+    // mGCMRegisterTask.execute(null, null, null);
+    // }
+    // }
+    // }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-//        if (mGCMRegisterTask != null) {
-//            mGCMRegisterTask.cancel(true);
-//        }
-//
-//        try {
-//            GCMRegistrar.onDestroy(this);
-//        } catch (Exception e) {
-//            LOGW(TAG, "GCM unregistration error", e);
-//        }
+        // if (mGCMRegisterTask != null) {
+        // mGCMRegisterTask.cancel(true);
+        // }
+        //
+        // try {
+        // GCMRegistrar.onDestroy(this);
+        // } catch (Exception e) {
+        // LOGW(TAG, "GCM unregistration error", e);
+        // }
     }
 
     @Override
@@ -192,16 +199,13 @@ public class HomeActivity extends BaseActivity implements
     }
 
     @Override
-    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
+    public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {}
 
     @Override
-    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-    }
+    public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {}
 
     @Override
-    public void onPageScrolled(int i, float v, int i1) {
-    }
+    public void onPageScrolled(int i, float v, int i1) {}
 
     @Override
     public void onPageSelected(int position) {
@@ -227,24 +231,27 @@ public class HomeActivity extends BaseActivity implements
     }
 
     @Override
-    public void onPageScrollStateChanged(int i) {
-    }
+    public void onPageScrollStateChanged(int i) {}
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Since the pager fragments don't have known tags or IDs, the only way to persist the
-        // reference is to use putFragment/getFragment. Remember, we're not persisting the exact
-        // Fragment instance. This mechanism simply gives us a way to persist access to the
-        // 'current' fragment instance for the given fragment (which changes across orientation
+        // Since the pager fragments don't have known tags or IDs, the only way
+        // to persist the
+        // reference is to use putFragment/getFragment. Remember, we're not
+        // persisting the exact
+        // Fragment instance. This mechanism simply gives us a way to persist
+        // access to the
+        // 'current' fragment instance for the given fragment (which changes
+        // across orientation
         // changes).
         //
-        // The outcome of all this is that the "Refresh" menu button refreshes the stream across
+        // The outcome of all this is that the "Refresh" menu button refreshes
+        // the stream across
         // orientation changes.
         if (mWebPageFragment != null) {
-            getSupportFragmentManager().putFragment(outState, "stream_fragment",
-                    mWebPageFragment);
+            getSupportFragmentManager().putFragment(outState, "stream_fragment", mWebPageFragment);
         }
     }
 
@@ -252,8 +259,8 @@ public class HomeActivity extends BaseActivity implements
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (mWebPageFragment == null) {
-            mWebPageFragment = (WebPageFragment) getSupportFragmentManager()
-                    .getFragment(savedInstanceState, "stream_fragment");
+            mWebPageFragment = (WebPageFragment) getSupportFragmentManager().getFragment(savedInstanceState,
+                                                                                         "stream_fragment");
         }
     }
 
@@ -304,15 +311,67 @@ public class HomeActivity extends BaseActivity implements
             }
         }
     }
-    
+
     private void setupAddKeyItem(Menu menu) {
         MenuItem addKeyEditItem = menu.findItem(R.id.menu_add_key);
         if (addKeyEditItem != null) {
             final EditText addKeyEditView = (EditText) addKeyEditItem.getActionView();
             if (addKeyEditView != null) {
-                addKeyEditView.addTextChangedListener(addKeyWatcher);
+                addKeyEditView.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        // TODO Auto-generated method stub
+
+                    }
+
+                });
+
+                final HomeActivity tempHomeActivity = this;
+
+                addKeyEditView.setOnEditorActionListener(new OnEditorActionListener() {
+                    @Override
+                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                        // TODO Auto-generated method stub
+                        if (actionId == EditorInfo.IME_NULL
+                            || actionId == EditorInfo.IME_ACTION_DONE
+                            && event.getAction() == KeyEvent.ACTION_DOWN) {
+                            LOGI(TAG, "The key to add is: " + v.getText());
+
+                            // when get the key user entered, start
+                            // KeyAddService to add the key
+                            Intent keyAddIntent = new Intent(KeyAddService.ACTION_ADD_KEY,
+                                                             null,
+                                                             tempHomeActivity,
+                                                             KeyAddService.class);
+                            keyAddIntent.putExtra(KeyAddService.EXTRA_KEY_NAME, v.getText().toString());
+                            keyAddIntent.putExtra(KeyAddService.EXTRA_KEY_TIME,
+                                                  System.currentTimeMillis());
+                            tempHomeActivity.startService(keyAddIntent);
+
+                            addKeyEditView.clearFocus();
+                        }
+                        Toast.makeText(tempHomeActivity,
+                                       v.getText() + "--" + actionId,
+                                       Toast.LENGTH_LONG).show();
+
+                        return true;
+                    }
+
+                });
             }
-            
+
             addKeyEditItem.setOnActionExpandListener(new OnActionExpandListener() {
                 @Override
                 public boolean onMenuItemActionCollapse(MenuItem item) {
@@ -322,7 +381,7 @@ public class HomeActivity extends BaseActivity implements
 
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem item) {
-                    addKeyEditView.clearFocus();
+                    // addKeyEditView.clearFocus();
                     return true; // Return true to expand action view
                 }
             });
@@ -332,9 +391,9 @@ public class HomeActivity extends BaseActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-//            case R.id.menu_refresh:
-//                triggerRefresh();
-//                return true;
+        // case R.id.menu_refresh:
+        // triggerRefresh();
+        // return true;
 
             case R.id.menu_search:
                 if (!UIUtils.hasHoneycomb()) {
@@ -342,7 +401,7 @@ public class HomeActivity extends BaseActivity implements
                     return true;
                 }
                 break;
-                
+
             case R.id.menu_add_key:
                 break;
 
@@ -350,34 +409,34 @@ public class HomeActivity extends BaseActivity implements
                 HelpUtils.showAbout(this);
                 return true;
 
-//            case R.id.menu_sign_out:
-//                AccountUtils.signOut(this);
-//                finish();
-//                return true;
-//
-//            case R.id.menu_beam:
-//                Intent beamIntent = new Intent(this, BeamActivity.class);
-//                startActivity(beamIntent);
-//                return true;
+                // case R.id.menu_sign_out:
+                // AccountUtils.signOut(this);
+                // finish();
+                // return true;
+                //
+                // case R.id.menu_beam:
+                // Intent beamIntent = new Intent(this, BeamActivity.class);
+                // startActivity(beamIntent);
+                // return true;
 
         }
         return super.onOptionsItemSelected(item);
     }
 
-//    private void triggerRefresh() {
-//        Bundle extras = new Bundle();
-//        extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-//        if (!UIUtils.isGoogleTV(this)) {
-//            ContentResolver.requestSync(
-//                    new Account(AccountUtils.getChosenAccountName(this),
-//                            GoogleAccountManager.ACCOUNT_TYPE),
-//                    ScheduleContract.CONTENT_AUTHORITY, extras);
-//        }
-//
-//        if (mWebPageFragment != null) {
-//            mWebPageFragment.refresh();
-//        }
-//    }
+    // private void triggerRefresh() {
+    // Bundle extras = new Bundle();
+    // extras.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+    // if (!UIUtils.isGoogleTV(this)) {
+    // ContentResolver.requestSync(
+    // new Account(AccountUtils.getChosenAccountName(this),
+    // GoogleAccountManager.ACCOUNT_TYPE),
+    // ScheduleContract.CONTENT_AUTHORITY, extras);
+    // }
+    //
+    // if (mWebPageFragment != null) {
+    // mWebPageFragment.refresh();
+    // }
+    // }
 
     @Override
     protected void onPause() {
@@ -391,12 +450,13 @@ public class HomeActivity extends BaseActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-//        mSyncStatusObserver.onStatusChanged(0);
-//
-//        // Watch for sync state changes
-//        final int mask = ContentResolver.SYNC_OBSERVER_TYPE_PENDING |
-//                ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
-//        mSyncObserverHandle = ContentResolver.addStatusChangeListener(mask, mSyncStatusObserver);
+        // mSyncStatusObserver.onStatusChanged(0);
+        //
+        // // Watch for sync state changes
+        // final int mask = ContentResolver.SYNC_OBSERVER_TYPE_PENDING |
+        // ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
+        // mSyncObserverHandle = ContentResolver.addStatusChangeListener(mask,
+        // mSyncStatusObserver);
     }
 
     public void setRefreshActionButtonState(boolean refreshing) {
@@ -414,48 +474,30 @@ public class HomeActivity extends BaseActivity implements
         }
     }
 
-//    private final SyncStatusObserver mSyncStatusObserver = new SyncStatusObserver() {
-//        @Override
-//        public void onStatusChanged(int which) {
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    String accountName = AccountUtils.getChosenAccountName(HomeActivity.this);
-//                    if (TextUtils.isEmpty(accountName)) {
-//                        setRefreshActionButtonState(false);
-//                        return;
-//                    }
-//
-//                    Account account = new Account(accountName, GoogleAccountManager.ACCOUNT_TYPE);
-//                    boolean syncActive = ContentResolver.isSyncActive(
-//                            account, ScheduleContract.CONTENT_AUTHORITY);
-//                    boolean syncPending = ContentResolver.isSyncPending(
-//                            account, ScheduleContract.CONTENT_AUTHORITY);
-//                    setRefreshActionButtonState(syncActive || syncPending);
-//                }
-//            });
-//        }
-//    };
-    
-    private TextWatcher addKeyWatcher = new TextWatcher()  {
+    // private final SyncStatusObserver mSyncStatusObserver = new
+    // SyncStatusObserver() {
+    // @Override
+    // public void onStatusChanged(int which) {
+    // runOnUiThread(new Runnable() {
+    // @Override
+    // public void run() {
+    // String accountName =
+    // AccountUtils.getChosenAccountName(HomeActivity.this);
+    // if (TextUtils.isEmpty(accountName)) {
+    // setRefreshActionButtonState(false);
+    // return;
+    // }
+    //
+    // Account account = new Account(accountName,
+    // GoogleAccountManager.ACCOUNT_TYPE);
+    // boolean syncActive = ContentResolver.isSyncActive(
+    // account, ScheduleContract.CONTENT_AUTHORITY);
+    // boolean syncPending = ContentResolver.isSyncPending(
+    // account, ScheduleContract.CONTENT_AUTHORITY);
+    // setRefreshActionButtonState(syncActive || syncPending);
+    // }
+    // });
+    // }
+    // };
 
-        @Override
-        public void afterTextChanged(Editable s) {
-            // TODO Auto-generated method stub
-            
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            // TODO Auto-generated method stub
-            
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            // TODO Auto-generated method stub
-            
-        }
-        
-    };
 }

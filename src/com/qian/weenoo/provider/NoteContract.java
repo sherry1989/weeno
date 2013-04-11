@@ -1,5 +1,8 @@
 package com.qian.weenoo.provider;
 
+import com.google.android.apps.iosched.provider.ScheduleContract.Tracks;
+import com.google.android.apps.iosched.util.ParserUtils;
+
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
@@ -47,6 +50,8 @@ public class NoteContract {
     }
     
     interface ImagesColumns {
+        /** Unique string identifying this image. */
+        String IMAGE_ID = "image_id";
         /** URL of this image. */
         String IMAGE_URL = "image_url";
         /** State of this image. */
@@ -54,6 +59,8 @@ public class NoteContract {
     }
     
     interface WebsColumns {
+        /** Unique string identifying this web. */
+        String WEB_ID = "web_id";
         /** Title of this web page. */
         String WEB_TITLE = "web_title";
         /** Display content of this web page. */
@@ -84,6 +91,12 @@ public class NoteContract {
         public static final String CONTENT_ITEM_TYPE =
                 "vnd.android.cursor.item/vnd.weenoo.key";
         
+        /** Key's possible state. */
+        public static final String KEY_STATE_NEED_SEARCH = "need_search";
+        public static final String KEY_STATE_COMPLETE_SEARCH = "complete_search";
+        public static final String KEY_STATE_COMPLETE_NOTE = "complete_note";
+        
+        
         /** Count of {@link Images} inside given track. */
         public static final String IMAGES_COUNT = "images_count";
         /** Count of {@link Webs} inside given track. */
@@ -106,6 +119,14 @@ public class NoteContract {
         /** Read {@link #KEY_NAME} from {@link Keys} {@link Uri}. */
         public static String getKeyName(Uri uri) {
             return uri.getPathSegments().get(2);
+        }
+        
+        /**
+         * Generate a {@link #KEY_ID} that will always match the requested
+         * {@link Keys} details.
+         */
+        public static String generateKeyId(String name) {
+            return ParserUtils.sanitizeId(name);
         }
     }
     

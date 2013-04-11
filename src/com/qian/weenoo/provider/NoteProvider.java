@@ -1,6 +1,7 @@
 package com.qian.weenoo.provider;
 
 import static com.google.android.apps.iosched.util.LogUtils.LOGV;
+import static com.google.android.apps.iosched.util.LogUtils.LOGI;
 import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
 
 import java.io.FileNotFoundException;
@@ -49,8 +50,10 @@ public class NoteProvider extends ContentProvider {
     private static final int KEYS_ID_WEBS = 104;
 
     private static final int IMAGES = 200;
+    private static final int IMAGES_ID = 201;
 
     private static final int WEBS = 300;
+    private static final int WEBS_ID = 301;
     
     /**
      * Build and return a {@link UriMatcher} that catches all {@link Uri}
@@ -67,8 +70,10 @@ public class NoteProvider extends ContentProvider {
         matcher.addURI(authority, "keys/*/webs", KEYS_ID_WEBS);
 
         matcher.addURI(authority, "images", IMAGES);
+        matcher.addURI(authority, "images/*", IMAGES_ID);
 
         matcher.addURI(authority, "webs", WEBS);
+        matcher.addURI(authority, "webs/*", WEBS_ID);
 
         return matcher;
     }
@@ -76,6 +81,7 @@ public class NoteProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         mOpenHelper = new NoteDatabase(getContext());
+        LOGI(TAG, "create database.");
         return true;
     }
     
@@ -104,8 +110,12 @@ public class NoteProvider extends ContentProvider {
                 return Keys.CONTENT_TYPE;
             case IMAGES:
                 return Images.CONTENT_TYPE;
+            case IMAGES_ID:
+                return Images.CONTENT_ITEM_TYPE;
             case WEBS:
                 return Webs.CONTENT_TYPE;
+            case WEBS_ID:
+                return Webs.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -254,8 +264,18 @@ public class NoteProvider extends ContentProvider {
             case IMAGES: {
                 return builder.table(Tables.IMAGES);
             }
+            case IMAGES_ID: {
+                final String imageId = Images.getImageId(uri);
+                return builder.table(Tables.IMAGES)
+                        .where(Images.IMAGE_ID + "=?", imageId);
+            }
             case WEBS: {
                 return builder.table(Tables.WEBS);
+            }
+            case WEBS_ID: {
+                final String webId = Webs.getWebId(uri);
+                return builder.table(Tables.WEBS)
+                        .where(Webs.WEB_ID + "=?", webId);
             }
             case KEYS_ID_IMAGES: {
                 final String keyId = Keys.getKeyId(uri);
@@ -300,7 +320,7 @@ public class NoteProvider extends ContentProvider {
             case KEYS_ID_IMAGES: {
                 final String keyId = Keys.getKeyId(uri);
                 return builder.table(Tables.IMAGES_JOIN_KEYS)
-                        .mapToTable(Images._ID, Tables.IMAGES)
+                        .mapToTable(Images.IMAGE_ID, Tables.IMAGES)
                         .mapToTable(Images.IMAGE_URL, Tables.IMAGES)
                         .mapToTable(Images.IMAGE_STATE, Tables.IMAGES)
                         .where(Qualified.IMAGES_KEY_ID + "=?", keyId);
@@ -317,13 +337,25 @@ public class NoteProvider extends ContentProvider {
             }
             case IMAGES: {
                 return builder.table(Tables.IMAGES_JOIN_KEYS)
-                        .mapToTable(Images._ID, Tables.IMAGES)
+                        .mapToTable(Images.IMAGE_ID, Tables.IMAGES)
                         .mapToTable(Images.KEY_ID, Tables.IMAGES);
+            }
+            case IMAGES_ID: {
+                final String imageId = Images.getImageId(uri);
+                return builder.table(Tables.IMAGES_JOIN_KEYS)
+                        .mapToTable(Images.KEY_ID, Tables.IMAGES)
+                        .where(Images.IMAGE_ID + "=?", imageId);
             }
             case WEBS: {
                 return builder.table(Tables.WEBS_JOIN_KEYS)
                         .mapToTable(Webs._ID, Tables.WEBS)
                         .mapToTable(Webs.KEY_ID, Tables.WEBS);
+            }
+            case WEBS_ID: {
+                final String webId = Webs.getWebId(uri);
+                return builder.table(Tables.WEBS)
+                        .mapToTable(Webs.KEY_ID, Tables.WEBS)
+                        .where(Webs.WEB_ID + "=?", webId);
             }
             default: {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -358,9 +390,9 @@ public class NoteProvider extends ContentProvider {
      */
     private interface Qualified {
         String KEYS_KEY_ID = Tables.KEYS + "." + Keys.KEY_ID;
-        String IMAGES_IMAGE_ID = Tables.IMAGES + "." + Images._ID;
+        String IMAGES_IMAGE_ID = Tables.IMAGES + "." + Images.IMAGE_ID;
         String IMAGES_KEY_ID = Tables.IMAGES + "." + Images.KEY_ID;
-        String WEBS_WEB_ID = Tables.WEBS + "." + Webs._ID;
+        String WEBS_WEB_ID = Tables.WEBS + "." + Webs.WEB_ID;
         String WEBS_KEY_ID = Tables.WEBS + "." + Webs.KEY_ID;
 
     }
