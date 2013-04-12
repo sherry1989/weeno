@@ -34,9 +34,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGD;
-import static com.google.android.apps.iosched.util.LogUtils.LOGE;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGD;
+import static com.qian.weeno.util.LogUtils.LOGE;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * A subclass of {@link ImageWorker} that fetches images from a URL.

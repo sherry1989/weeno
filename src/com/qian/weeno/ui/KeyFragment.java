@@ -1,6 +1,7 @@
-package com.qian.weenoo.ui;
+package com.qian.weeno.ui;
 
-import com.qian.weenoo.R;
+import com.qian.weeno.service.KeyAddService;
+import com.qian.weeno.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ import android.widget.CursorAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.google.android.apps.iosched.util.ParserUtils;
@@ -43,16 +45,17 @@ import com.google.android.apps.iosched.provider.ScheduleContract;
 // import com.google.android.apps.iosched.ui.SessionLivestreamActivity;
 // import com.google.android.apps.iosched.ui.tablet.SessionsVendorsMultiPaneActivity;
 import com.google.android.apps.iosched.ui.widget.SimpleSectionedListAdapter;
+import com.google.android.apps.iosched.util.DetachableResultReceiver;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGW;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGW;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * A fragment that provides interface to enter a search key and shows the
  * historical keys, etc.
  */
 public class KeyFragment extends SherlockListFragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, ActionMode.Callback {
+        LoaderManager.LoaderCallbacks<Cursor>, ActionMode.Callback, DetachableResultReceiver.Receiver {
 
     private static final String        TAG = makeLogTag(KeyFragment.class);
 
@@ -62,6 +65,8 @@ public class KeyFragment extends SherlockListFragment implements
     private View                       mLongClickedView;
     private ActionMode                 mActionMode;
     private boolean                    mScrollToNow;
+    
+    public DetachableResultReceiver mReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +82,9 @@ public class KeyFragment extends SherlockListFragment implements
                                                   R.layout.list_item_schedule_header,
                                                   mKeyAdapter);
         setListAdapter(mAdapter);
+        
+        mReceiver = new DetachableResultReceiver(new Handler());
+        mReceiver.setReceiver(this);
 
         if (savedInstanceState == null) {
             mScrollToNow = true;
@@ -260,6 +268,46 @@ public class KeyFragment extends SherlockListFragment implements
     @Override
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         return false;
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    public void onReceiveResult(int resultCode, Bundle resultData) {
+        // TODO Auto-generated method stub
+        HomeActivity activity = (HomeActivity) getActivity();
+        if (activity == null) {
+            return;
+        }
+
+        switch (resultCode) {
+            case KeyAddService.STATUS_ADD_FINISHED: {
+                //TODO update key list
+                Toast.makeText(activity,
+                               "STATUS_ADD_FINISHED",
+                               Toast.LENGTH_LONG).show();
+                break;
+            }
+            case KeyAddService.STATUS_SEARCH_FINISHED: {
+                //TODO update key list
+                Toast.makeText(activity,
+                               "STATUS_SEARCH_FINISHED",
+                               Toast.LENGTH_LONG).show();
+                break;
+            }
+            case KeyAddService.STATUS_NOTE_FINISHED: {
+                 //TODO update key list
+                 break;
+            }
+            case KeyAddService.STATUS_ERROR: {
+                // Error happened down in KeyAddService, show as toast.
+                final String errorText = getString(R.string.toast_serchkey_error, resultData
+                        .getString(Intent.EXTRA_TEXT));
+                Toast.makeText(activity, errorText, Toast.LENGTH_LONG).show();
+                break;
+            }
+        }
+
+//        activity.updateRefreshStatus(mSyncing);
     }
 
     /**
@@ -508,4 +556,5 @@ public class KeyFragment extends SherlockListFragment implements
         int      STARRED_SESSION_URL            = 14;
         int      STARRED_SESSION_LIVESTREAM_URL = 15;
     }
+
 }

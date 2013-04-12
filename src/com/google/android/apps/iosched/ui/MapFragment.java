@@ -17,10 +17,10 @@
 package com.google.android.apps.iosched.ui;
 
 //change from iosched to weenoo
-import com.qian.weenoo.tracking.EasyTracker;
-import com.qian.weenoo.ui.BaseActivity;
-import com.qian.weenoo.BuildConfig;
-import com.qian.weenoo.R;
+import com.qian.weeno.tracking.EasyTracker;
+import com.qian.weeno.ui.BaseActivity;
+import com.qian.weeno.BuildConfig;
+import com.qian.weeno.R;
 
 import com.google.android.apps.iosched.util.UIUtils;
 
@@ -42,9 +42,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGD;
-import static com.google.android.apps.iosched.util.LogUtils.LOGE;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGD;
+import static com.qian.weeno.util.LogUtils.LOGE;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * Shows a {@link WebView} with a map of the conference venue.

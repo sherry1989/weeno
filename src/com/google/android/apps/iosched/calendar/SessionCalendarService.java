@@ -16,8 +16,8 @@
 
 package com.google.android.apps.iosched.calendar;
 
-//change from iosched to weenoo
-import com.qian.weenoo.R;
+//change from iosched to weeno
+import com.qian.weeno.R;
 
 import com.google.android.apps.iosched.provider.ScheduleContract;
 //import com.google.android.apps.iosched.util.AccountUtils;
@@ -40,9 +40,9 @@ import android.text.TextUtils;
 
 import java.util.ArrayList;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGE;
-import static com.google.android.apps.iosched.util.LogUtils.LOGW;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGE;
+import static com.qian.weeno.util.LogUtils.LOGW;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * Background {@link android.app.Service} that adds or removes session Calendar events through

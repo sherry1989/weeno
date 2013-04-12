@@ -17,7 +17,7 @@
 package com.google.android.apps.iosched.util;
 
 // change from iosched to weenoo
-import com.qian.weenoo.BuildConfig;
+import com.qian.weeno.BuildConfig;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -39,8 +39,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGD;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGD;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * This class wraps up completing some arbitrary long running work when loading a bitmap to an

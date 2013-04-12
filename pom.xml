@@ -4,9 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.qian</groupId>
 	<artifactId>weenoo</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>apk</packaging>
-	<name>weenoo</name>
+	<name>weeno</name>
 
 	<properties>
 		<platform.version> 4.0.1.2

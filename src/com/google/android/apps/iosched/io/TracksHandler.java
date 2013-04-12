@@ -29,8 +29,8 @@ import android.graphics.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
 import static com.google.android.apps.iosched.util.ParserUtils.sanitizeId;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * Handler that parses track JSON data into a list of content provider operations.

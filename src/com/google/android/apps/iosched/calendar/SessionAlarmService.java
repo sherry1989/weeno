@@ -17,7 +17,7 @@
 package com.google.android.apps.iosched.calendar;
 
 //change from iosched to weenoo
-import com.qian.weenoo.R;
+import com.qian.weeno.R;
 
 import com.google.android.apps.iosched.provider.ScheduleContract;
 import com.google.android.apps.iosched.util.UIUtils;
@@ -39,7 +39,7 @@ import android.support.v4.app.NotificationCompat;
 
 import java.util.ArrayList;
 
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * Background service to handle scheduling of starred session notification via

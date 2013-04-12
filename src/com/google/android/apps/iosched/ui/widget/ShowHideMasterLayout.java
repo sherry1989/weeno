@@ -29,8 +29,8 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGW;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGW;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * A layout that supports the Show/Hide pattern for portrait tablet layouts. See <a

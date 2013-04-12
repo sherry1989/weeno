@@ -16,8 +16,8 @@
 
 package com.google.android.apps.iosched.io;
 
-//change from iosched to weenoo
-import com.qian.weenoo.R;
+//change from iosched to weeno
+import com.qian.weeno.R;
 
 import com.google.android.apps.iosched.io.model.SandboxCompany;
 import com.google.android.apps.iosched.provider.ScheduleContract;
@@ -33,8 +33,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.google.android.apps.iosched.provider.ScheduleContract.Vendors;
-import static com.google.android.apps.iosched.util.LogUtils.LOGI;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGI;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * Handler that parses developer sandbox JSON data into a list of content provider operations.

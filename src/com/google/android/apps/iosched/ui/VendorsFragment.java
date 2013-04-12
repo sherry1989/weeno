@@ -16,9 +16,9 @@
 
 package com.google.android.apps.iosched.ui;
 
-//change from iosched to weenoo
-import com.qian.weenoo.R;
-import com.qian.weenoo.ui.BaseActivity;
+//change from iosched to weeno
+import com.qian.weeno.ui.BaseActivity;
+import com.qian.weeno.R;
 
 import com.google.android.apps.iosched.provider.ScheduleContract;
 import com.google.android.apps.iosched.util.UIUtils;
@@ -44,9 +44,9 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGD;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
 import static com.google.android.apps.iosched.util.UIUtils.buildStyledSnippet;
+import static com.qian.weeno.util.LogUtils.LOGD;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * A {@link ListFragment} showing a list of developer sandbox companies.

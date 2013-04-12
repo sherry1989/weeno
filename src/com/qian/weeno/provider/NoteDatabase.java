@@ -1,13 +1,13 @@
-package com.qian.weenoo.provider;
+package com.qian.weeno.provider;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGD;
-import static com.google.android.apps.iosched.util.LogUtils.LOGW;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGD;
+import static com.qian.weeno.util.LogUtils.LOGW;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
-import com.qian.weenoo.provider.NoteContract.Keys;
-import com.qian.weenoo.provider.NoteContract.KeysColumns;
-import com.qian.weenoo.provider.NoteContract.ImagesColumns;
-import com.qian.weenoo.provider.NoteContract.WebsColumns;
+import com.qian.weeno.provider.NoteContract.ImagesColumns;
+import com.qian.weeno.provider.NoteContract.Keys;
+import com.qian.weeno.provider.NoteContract.KeysColumns;
+import com.qian.weeno.provider.NoteContract.WebsColumns;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

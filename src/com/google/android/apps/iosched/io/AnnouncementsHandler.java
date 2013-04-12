@@ -16,8 +16,8 @@
 
 package com.google.android.apps.iosched.io;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGI;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGI;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 import android.content.ContentProviderOperation;
 import android.content.Context;

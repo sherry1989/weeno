@@ -1,4 +1,4 @@
-package com.qian.weenoo.tracking;
+package com.qian.weeno.tracking;
 
 import android.app.Activity;
 import android.content.Context;

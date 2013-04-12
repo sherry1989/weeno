@@ -1,8 +1,8 @@
-package com.qian.weenoo.provider;
+package com.qian.weeno.provider;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGV;
-import static com.google.android.apps.iosched.util.LogUtils.LOGI;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGI;
+import static com.qian.weeno.util.LogUtils.LOGV;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -10,10 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.google.android.apps.iosched.util.SelectionBuilder;
-import com.qian.weenoo.provider.NoteContract.Images;
-import com.qian.weenoo.provider.NoteContract.Keys;
-import com.qian.weenoo.provider.NoteContract.Webs;
-import com.qian.weenoo.provider.NoteDatabase.Tables;
+import com.qian.weeno.provider.NoteContract.Images;
+import com.qian.weeno.provider.NoteContract.Keys;
+import com.qian.weeno.provider.NoteContract.Webs;
+import com.qian.weeno.provider.NoteDatabase.Tables;
 
 import android.app.Activity;
 import android.app.SearchManager;

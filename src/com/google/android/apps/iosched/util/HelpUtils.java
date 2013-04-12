@@ -17,7 +17,7 @@
 package com.google.android.apps.iosched.util;
 
 //change from iosched to weenoo
-import com.qian.weenoo.R;
+import com.qian.weeno.R;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

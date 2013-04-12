@@ -31,9 +31,9 @@ import android.content.Context;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGE;
-import static com.google.android.apps.iosched.util.LogUtils.LOGV;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGE;
+import static com.qian.weeno.util.LogUtils.LOGV;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 
 public class BlocksHandler extends JSONHandler {

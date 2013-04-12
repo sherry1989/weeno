@@ -1,4 +1,4 @@
-package com.qian.weenoo.ui;
+package com.qian.weeno.ui;
 
 import android.accounts.Account;
 import android.annotation.TargetApi;
@@ -34,16 +34,16 @@ import com.google.android.apps.iosched.calendar.SessionAlarmService;
 import com.google.android.apps.iosched.util.HelpUtils;
 import com.google.android.apps.iosched.util.UIUtils;
 
-import com.qian.weenoo.BuildConfig;
-import com.qian.weenoo.Config;
-import com.qian.weenoo.R;
-import com.qian.weenoo.service.KeyAddService;
-import com.qian.weenoo.tracking.EasyTracker;
+import com.qian.weeno.Config;
+import com.qian.weeno.service.KeyAddService;
+import com.qian.weeno.tracking.EasyTracker;
+import com.qian.weeno.BuildConfig;
+import com.qian.weeno.R;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGD;
-import static com.google.android.apps.iosched.util.LogUtils.LOGI;
-import static com.google.android.apps.iosched.util.LogUtils.LOGW;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGD;
+import static com.qian.weeno.util.LogUtils.LOGI;
+import static com.qian.weeno.util.LogUtils.LOGW;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * The landing screen for the app, once the user has logged in.
@@ -358,6 +358,7 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
                             keyAddIntent.putExtra(KeyAddService.EXTRA_KEY_NAME, v.getText().toString());
                             keyAddIntent.putExtra(KeyAddService.EXTRA_KEY_TIME,
                                                   System.currentTimeMillis());
+                            keyAddIntent.putExtra(KeyAddService.EXTRA_STATUS_RECEIVER, mKeyFragment.mReceiver);
                             tempHomeActivity.startService(keyAddIntent);
 
                             addKeyEditView.clearFocus();

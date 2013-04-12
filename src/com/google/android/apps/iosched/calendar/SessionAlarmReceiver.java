@@ -20,7 +20,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * {@link BroadcastReceiver} to reinitialize {@link android.app.AlarmManager} for all starred

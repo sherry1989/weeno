@@ -16,9 +16,9 @@
 
 package com.google.android.apps.iosched.util;
 
-//change from iosched to weenoo
-import com.qian.weenoo.tracking.EasyTracker;
-import com.qian.weenoo.R;
+//change from iosched to weeno
+import com.qian.weeno.tracking.EasyTracker;
+import com.qian.weeno.R;
 
 //import com.google.android.apps.iosched.appwidget.MyScheduleWidgetProvider;
 import com.google.android.apps.iosched.provider.ScheduleContract;
@@ -39,8 +39,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ShareCompat;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGD;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGD;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * Helper class for dealing with common actions to take on a session.

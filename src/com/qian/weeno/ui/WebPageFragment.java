@@ -1,4 +1,4 @@
-package com.qian.weenoo.ui;
+package com.qian.weeno.ui;
 
 import com.actionbarsherlock.app.SherlockFragment;
 

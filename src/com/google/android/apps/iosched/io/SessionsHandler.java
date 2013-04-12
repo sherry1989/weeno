@@ -16,8 +16,8 @@
 
 package com.google.android.apps.iosched.io;
 
-//change from iosched to weenoo
-import com.qian.weenoo.R;
+//change from iosched to weeno
+import com.qian.weeno.R;
 
 import com.google.android.apps.iosched.io.model.Event;
 import com.google.android.apps.iosched.io.model.SessionsResponse;
@@ -46,10 +46,10 @@ import java.util.regex.Pattern;
 
 import static com.google.android.apps.iosched.provider.ScheduleDatabase.SessionsSpeakers;
 import static com.google.android.apps.iosched.provider.ScheduleDatabase.SessionsTracks;
-import static com.google.android.apps.iosched.util.LogUtils.LOGI;
-import static com.google.android.apps.iosched.util.LogUtils.LOGW;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
 import static com.google.android.apps.iosched.util.ParserUtils.sanitizeId;
+import static com.qian.weeno.util.LogUtils.LOGI;
+import static com.qian.weeno.util.LogUtils.LOGW;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * Handler that parses session JSON data into a list of content provider operations.

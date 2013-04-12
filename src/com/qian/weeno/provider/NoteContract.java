@@ -1,4 +1,4 @@
-package com.qian.weenoo.provider;
+package com.qian.weeno.provider;
 
 import com.google.android.apps.iosched.provider.ScheduleContract.Tracks;
 import com.google.android.apps.iosched.util.ParserUtils;
@@ -71,7 +71,7 @@ public class NoteContract {
         String WEB_STATE = "web_state";
     }
     
-    public static final String CONTENT_AUTHORITY = "com.qian.weenoo";
+    public static final String CONTENT_AUTHORITY = "com.qian.weeno";
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     
@@ -145,6 +145,10 @@ public class NoteContract {
         
         /** {@link Keys#KEY_ID} that this image belongs to. */
         public static final String KEY_ID = "key_id";
+        
+        /** Image's possible state. */
+        public static final String IMAGE_STATE_NOT_CHOSEN = "not_chosen";
+        public static final String IMAGE_STATE_CHOSEN = "chosen";
 
         /** Build {@link Uri} for requested {@link #IMAGE_ID}. */
         public static Uri buildImageUri(String imageId) {
@@ -163,6 +167,14 @@ public class NoteContract {
         public static String getImageId(Uri uri) {
             return uri.getPathSegments().get(1);
         }
+        
+        /**
+         * Generate a {@link #IMAGE_ID} that will always match the requested
+         * {@link Images} details.
+         */
+        public static String generateImageId(String name) {
+            return ParserUtils.sanitizeId(name);
+        }
     }
     
     /**
@@ -179,6 +191,10 @@ public class NoteContract {
         
         /** {@link Keys#KEY_ID} that this web page belongs to. */
         public static final String KEY_ID = "key_id";
+        
+        /** Web's possible state. */
+        public static final String WEB_STATE_NOT_CHOSEN = "not_chosen";
+        public static final String WEB_STATE_CHOSEN = "chosen";
 
         /** Build {@link Uri} for requested {@link #WEB_ID}. */
         public static Uri buildWebUri(String webId) {
@@ -196,6 +212,14 @@ public class NoteContract {
         /** Read {@link #WEB_ID} from {@link Webs} {@link Uri}. */
         public static String getWebId(Uri uri) {
             return uri.getPathSegments().get(1);
+        }
+        
+        /**
+         * Generate a {@link #WEB_ID} that will always match the requested
+         * {@link Webs} details.
+         */
+        public static String generateWebId(String name) {
+            return ParserUtils.sanitizeId(name);
         }
     }
     

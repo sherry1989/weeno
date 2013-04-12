@@ -16,9 +16,9 @@
 
 package com.google.android.apps.iosched.ui;
 
-//change from iosched to weenoo
-import com.qian.weenoo.R;
-import com.qian.weenoo.ui.BaseActivity;
+//change from iosched to weeno
+import com.qian.weeno.ui.BaseActivity;
+import com.qian.weeno.R;
 
 import android.content.Intent;
 import android.os.Bundle;

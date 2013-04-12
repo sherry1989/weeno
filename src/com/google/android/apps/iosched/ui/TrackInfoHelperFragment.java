@@ -16,8 +16,8 @@
 
 package com.google.android.apps.iosched.ui;
 
-//change from iosched to weenoo
-import com.qian.weenoo.R;
+//change from iosched to weeno
+import com.qian.weeno.R;
 
 import com.google.android.apps.iosched.provider.ScheduleContract;
 

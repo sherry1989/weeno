@@ -1,20 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.qian.weenoo"
-    android:versionCode="1"
-    android:versionName="0.0.1-SNAPSHOT" >
+    package="com.qian.weeno"
+    android:versionCode="201304"
+    android:versionName="0.0.1" >
 
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="16" />
 
+    <permission
+        android:name="com.qian.weeno.permission.WRITE_NOTE"
+        android:description="@string/permission_write"
+        android:label="@string/permission_write"
+        android:protectionLevel="normal" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
+
     <application
         android:icon="@drawable/icon"
-        android:label="@string/app_name" >
-
+        android:label="@string/app_name" 
+        android:allowBackup = "true">
         <activity
-            android:name=".ui.HomeActivity"
+            android:name="com.qian.weeno.ui.HomeActivity"
             android:label="@string/app_name" >
+
             <!-- android:theme="@style/Theme.Iosched.Home" -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,6 +42,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Data, sync and schedule editing components -->
+        
+         <provider
+            android:name="com.qian.weeno.provider.NoteProvider"
+            android:authorities="com.qian.weeno"
+            android:writePermission="com.qian.weeno.permission.WRITE_NOTE"
+            android:syncable="true"
+            android:label="@string/app_name" />
+
+        <service android:name=".service.KeyAddService" />
     </application>
 
 </manifest>

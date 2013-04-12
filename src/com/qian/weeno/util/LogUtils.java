@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.util;
+package com.qian.weeno.util;
 
 //change from iosched to weenoo
-import com.qian.weenoo.BuildConfig;
+import com.qian.weeno.BuildConfig;
 
 import android.util.Log;
 
@@ -25,7 +25,7 @@ import android.util.Log;
  * Helper methods that make logging more consistent throughout the app.
  */
 public class LogUtils {
-    private static final String LOG_PREFIX = "iosched_";
+    private static final String LOG_PREFIX = "weenoo_";
     private static final int LOG_PREFIX_LENGTH = LOG_PREFIX.length();
     private static final int MAX_LOG_TAG_LENGTH = 23;
 

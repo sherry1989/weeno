@@ -107,6 +107,8 @@
         <item quantity="one">Session removed from your agenda</item>
         <item quantity="other"><xliff:g id="number_of_sessions">%1$s</xliff:g> sessions removed from your agenda</item>
     </plurals>
+    
+    <string name="toast_serchkey_error">Sync error: <xliff:g id="error">%1$s</xliff:g></string>
 
     <!-- Schedule -->
     <string name="schedule_empty_slot_title_template">Browse<xliff:g id="block_type">%1$s</xliff:g>&#8230;</string>

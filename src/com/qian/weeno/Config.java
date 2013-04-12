@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package com.qian.weenoo;
+package com.qian.weeno;
 
 public class Config {
     // OAuth 2.0 related config
     public static final String APP_NAME = "Your-App-Name";
     public static final String API_KEY = "API_KEY"; // from the APIs console
     public static final String CLIENT_ID = "0000000000000.apps.googleusercontent.com"; // from the APIs console
+    
+    // weenoo server config
+    private static final String WEENOO_BASE_URL = "http://weeno.free4lab.com/weeno-server/";
+    public static final String SEARCH_KEY_URL = WEENOO_BASE_URL + "search?keyword=";
 
     // Conference API-specific config
     // NOTE: the backend used for the Google I/O 2012 Android app is not currently open source, so

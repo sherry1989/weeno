@@ -17,8 +17,8 @@
 package com.google.android.apps.iosched.util;
 
 //change from iosched to weenoo
-import com.qian.weenoo.BuildConfig;
-import com.qian.weenoo.R;
+import com.qian.weeno.BuildConfig;
+import com.qian.weeno.R;
 
 import com.google.android.apps.iosched.provider.ScheduleContract.Blocks;
 import com.google.android.apps.iosched.provider.ScheduleContract.Rooms;

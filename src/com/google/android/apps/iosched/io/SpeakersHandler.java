@@ -30,8 +30,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import static com.google.android.apps.iosched.provider.ScheduleContract.Speakers;
-import static com.google.android.apps.iosched.util.LogUtils.LOGI;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGI;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * Handler that parses speaker JSON data into a list of content provider operations.

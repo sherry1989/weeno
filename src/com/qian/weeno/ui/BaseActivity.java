@@ -1,9 +1,9 @@
-package com.qian.weenoo.ui;
+package com.qian.weeno.ui;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.qian.weenoo.R;
-import com.qian.weenoo.tracking.EasyTracker;
+import com.qian.weeno.tracking.EasyTracker;
+import com.qian.weeno.R;
 
 import android.content.Intent;
 import android.content.res.Resources;

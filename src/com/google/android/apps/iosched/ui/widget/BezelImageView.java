@@ -17,7 +17,7 @@
 package com.google.android.apps.iosched.ui.widget;
 
 //change from iosched to weenoo
-import com.qian.weenoo.R;
+import com.qian.weeno.R;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -32,8 +32,8 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGD;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGD;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * An {@link ImageView} that draws its contents inside a mask and draws a border drawable on top.
@@ -110,7 +110,7 @@ public class BezelImageView extends ImageView {
         // which invalidates itself. to prevent stack overflow errors, we must guard the
         // invalidation (see specialized behavior when guarded in invalidate() below).
         mGuardInvalidate = true;
-        super.onDraw(canvas);
+        super.draw(canvas);
         mGuardInvalidate = false;
         canvas.restoreToCount(sc);
         mBorderDrawable.draw(canvas);

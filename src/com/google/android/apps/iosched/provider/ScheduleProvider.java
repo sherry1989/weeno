@@ -50,8 +50,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGV;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGV;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * Provider that stores {@link ScheduleContract} data. Data is usually inserted

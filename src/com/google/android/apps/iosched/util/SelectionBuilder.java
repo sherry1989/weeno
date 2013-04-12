@@ -32,8 +32,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
-import static com.google.android.apps.iosched.util.LogUtils.LOGV;
-import static com.google.android.apps.iosched.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGV;
+import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
  * Helper for building selection clauses for {@link SQLiteDatabase}. Each
