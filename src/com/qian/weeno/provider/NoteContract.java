@@ -103,7 +103,7 @@ public class NoteContract {
         public static final String WEBS_COUNT = "webs_count";
 
         /** Default "ORDER BY" clause. */
-        public static final String DEFAULT_SORT = KeysColumns.KEY_NAME
+        public static final String DEFAULT_SORT = KeysColumns.KEY_SEARCH_TIME
                 + " COLLATE NOCASE ASC";
 
         /** Build {@link Uri} for requested {@link #KEY_ID}. */

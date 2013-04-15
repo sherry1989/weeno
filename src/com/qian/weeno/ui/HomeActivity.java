@@ -97,9 +97,10 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
         String homeScreenLabel;
         if (mViewPager != null) {
             // Phone setup
+            LOGI(TAG, "Phone setup");
             mViewPager.setAdapter(new HomePagerAdapter(getSupportFragmentManager()));
             mViewPager.setOnPageChangeListener(this);
-            // mViewPager.setPageMarginDrawable(R.drawable.grey_border_inset_lr);
+            mViewPager.setPageMarginDrawable(R.drawable.grey_border_inset_lr);
             mViewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.page_margin_width));
 
             final ActionBar actionBar = getSupportActionBar();
@@ -345,7 +346,7 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                         // TODO Auto-generated method stub
                         if (actionId == EditorInfo.IME_NULL
-                            || actionId == EditorInfo.IME_ACTION_DONE
+                            /*|| actionId == EditorInfo.IME_ACTION_DONE*/
                             && event.getAction() == KeyEvent.ACTION_DOWN) {
                             LOGI(TAG, "The key to add is: " + v.getText());
 

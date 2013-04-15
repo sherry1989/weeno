@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.android.apps.iosched.ui.widget;
+package com.qian.weeno.ui.widget;
 
 import android.content.Context;
 import android.database.DataSetObserver;

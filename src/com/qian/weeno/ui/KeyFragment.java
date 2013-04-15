@@ -1,6 +1,10 @@
 package com.qian.weeno.ui;
 
+import com.qian.weeno.provider.NoteContract;
 import com.qian.weeno.service.KeyAddService;
+import com.qian.weeno.ui.widget.SimpleSectionedListAdapter;
+import com.qian.weeno.util.UIUtils;
+import com.qian.weeno.util.ParserUtils;
 import com.qian.weeno.R;
 
 import java.util.ArrayList;
@@ -37,25 +41,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
-import com.google.android.apps.iosched.util.ParserUtils;
 import com.google.android.apps.iosched.util.SessionsHelper;
-import com.google.android.apps.iosched.util.UIUtils;
 import com.google.android.apps.iosched.util.actionmodecompat.ActionMode;
 import com.google.android.apps.iosched.provider.ScheduleContract;
 // import com.google.android.apps.iosched.ui.SessionLivestreamActivity;
-// import com.google.android.apps.iosched.ui.tablet.SessionsVendorsMultiPaneActivity;
-import com.google.android.apps.iosched.ui.widget.SimpleSectionedListAdapter;
+// import
+// com.google.android.apps.iosched.ui.tablet.SessionsVendorsMultiPaneActivity;
 import com.google.android.apps.iosched.util.DetachableResultReceiver;
 
 import static com.qian.weeno.util.LogUtils.LOGW;
 import static com.qian.weeno.util.LogUtils.makeLogTag;
+import static com.qian.weeno.util.LogUtils.LOGD;
+import static com.qian.weeno.util.LogUtils.LOGE;
+import static com.qian.weeno.util.LogUtils.LOGI;
+import static com.qian.weeno.util.LogUtils.LOGV;
 
 /**
  * A fragment that provides interface to enter a search key and shows the
  * historical keys, etc.
  */
 public class KeyFragment extends SherlockListFragment implements
-        LoaderManager.LoaderCallbacks<Cursor>, ActionMode.Callback, DetachableResultReceiver.Receiver {
+        LoaderManager.LoaderCallbacks<Cursor>, ActionMode.Callback,
+        DetachableResultReceiver.Receiver {
 
     private static final String        TAG = makeLogTag(KeyFragment.class);
 
@@ -65,8 +72,8 @@ public class KeyFragment extends SherlockListFragment implements
     private View                       mLongClickedView;
     private ActionMode                 mActionMode;
     private boolean                    mScrollToNow;
-    
-    public DetachableResultReceiver mReceiver;
+
+    public DetachableResultReceiver    mReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,10 +86,10 @@ public class KeyFragment extends SherlockListFragment implements
          */
         mKeyAdapter = new KeyAdapter(getActivity());
         mAdapter = new SimpleSectionedListAdapter(getActivity(),
-                                                  R.layout.list_item_schedule_header,
+                                                  R.layout.list_item_key_header,
                                                   mKeyAdapter);
         setListAdapter(mAdapter);
-        
+
         mReceiver = new DetachableResultReceiver(new Handler());
         mReceiver.setReceiver(this);
 
@@ -104,12 +111,14 @@ public class KeyFragment extends SherlockListFragment implements
         listView.setItemsCanFocus(true);
         listView.setCacheColorHint(Color.WHITE);
         listView.setSelector(android.R.color.transparent);
-        // listView.setEmptyView(root.findViewById(android.R.id.empty));
+        listView.setEmptyView(root.findViewById(android.R.id.empty));
         return root;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        LOGI(TAG, "onActivityCreated()");
+        
         super.onActivityCreated(savedInstanceState);
 
         // In support library r8, calling initLoader for a fragment in a
@@ -151,34 +160,47 @@ public class KeyFragment extends SherlockListFragment implements
     // LoaderCallbacks
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle data) {
+        LOGI(TAG, "onCreateLoader()");
         return new CursorLoader(getActivity(),
-                                ScheduleContract.Blocks.CONTENT_URI,
-                                BlocksQuery.PROJECTION,
+                                NoteContract.Keys.CONTENT_URI,
+                                KeysQuery.PROJECTION,
                                 null,
                                 null,
-                                ScheduleContract.Blocks.DEFAULT_SORT);
+                                NoteContract.Keys.DEFAULT_SORT);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        LOGI(TAG, "onLoadFinished()");
         if (getActivity() == null) {
             return;
         }
+        
+        LOGI(TAG, "before currentTime set ");
 
         long currentTime = UIUtils.getCurrentTime(getActivity());
+        
+        LOGI(TAG, "after currentTime set, currentTime is " + currentTime);
+        
         int firstNowPosition = ListView.INVALID_POSITION;
+        
+        LOGI(TAG, "before new sections, currentTime is " + currentTime);
 
         List<SimpleSectionedListAdapter.Section> sections = new ArrayList<SimpleSectionedListAdapter.Section>();
+        
+        LOGI(TAG, "after new sections.");
+        
         cursor.moveToFirst();
-        long previousBlockStart = -1;
-        long blockStart, blockEnd;
+        long previousSearchTime = -1;
+        long searchTime;
         while (!cursor.isAfterLast()) {
-            blockStart = cursor.getLong(BlocksQuery.BLOCK_START);
-            blockEnd = cursor.getLong(BlocksQuery.BLOCK_END);
-            if (!UIUtils.isSameDay(previousBlockStart, blockStart)) {
+            searchTime = cursor.getLong(KeysQuery.KEY_SEARCH_TIME);
+            LOGI(TAG, "onLoadFinished(), searchTime is " + searchTime);
+            if (!UIUtils.isSameDay(previousSearchTime, searchTime)) {
+                LOGI(TAG, "not same day, add section, position is " + cursor.getPosition());
                 sections.add(new SimpleSectionedListAdapter.Section(cursor.getPosition(),
                                                                     DateUtils.formatDateTime(getActivity(),
-                                                                                             blockStart,
+                                                                                             searchTime,
                                                                                              DateUtils.FORMAT_ABBREV_MONTH
                                                                                                      | DateUtils.FORMAT_SHOW_DATE
                                                                                                      | DateUtils.FORMAT_SHOW_WEEKDAY)));
@@ -187,10 +209,10 @@ public class KeyFragment extends SherlockListFragment implements
             // if we're currently in this block, or we're not in a block
             // and this
             // block is in the future, then this is the scroll position
-                && ((blockStart < currentTime && currentTime < blockEnd) || blockStart > currentTime)) {
+                && ((searchTime < currentTime/* && currentTime < blockEnd*/) || searchTime > currentTime)) {
                 firstNowPosition = cursor.getPosition();
             }
-            previousBlockStart = blockStart;
+            previousSearchTime = searchTime;
             cursor.moveToNext();
         }
 
@@ -208,42 +230,44 @@ public class KeyFragment extends SherlockListFragment implements
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {}
+    public void onLoaderReset(Loader<Cursor> loader) {
+        LOGI(TAG, "onLoaderReset()");
+    }
 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         SessionsHelper helper = new SessionsHelper(getActivity());
-        String title = mLongClickedItemData.get(BlocksQuery.STARRED_SESSION_TITLE);
-        String hashtags = mLongClickedItemData.get(BlocksQuery.STARRED_SESSION_HASHTAGS);
-        String url = mLongClickedItemData.get(BlocksQuery.STARRED_SESSION_URL);
+//        String title = mLongClickedItemData.get(KeysQuery.STARRED_SESSION_TITLE);
+//        String hashtags = mLongClickedItemData.get(KeysQuery.STARRED_SESSION_HASHTAGS);
+//        String url = mLongClickedItemData.get(KeysQuery.STARRED_SESSION_URL);
         boolean handled = false;
-        switch (item.getItemId()) {
-            case R.id.menu_map:
-                String roomId = mLongClickedItemData.get(BlocksQuery.STARRED_SESSION_ROOM_ID);
-                helper.startMapActivity(roomId);
-                handled = true;
-                break;
-            case R.id.menu_star:
-                String sessionId = mLongClickedItemData.get(BlocksQuery.STARRED_SESSION_ID);
-                Uri sessionUri = ScheduleContract.Sessions.buildSessionUri(sessionId);
-                helper.setSessionStarred(sessionUri, false, title);
-                handled = true;
-                break;
-            case R.id.menu_share:
-                // On ICS+ devices, we normally won't reach this as
-                // ShareActionProvider will handle
-                // sharing.
-                helper.shareSession(getActivity(), R.string.share_template, title, hashtags, url);
-                handled = true;
-                break;
-            case R.id.menu_social_stream:
-                helper.startSocialStream(hashtags);
-                handled = true;
-                break;
-            default:
-                LOGW(TAG, "Unknown action taken");
-        }
-        mActionMode.finish();
+//        switch (item.getItemId()) {
+//            case R.id.menu_map:
+//                String roomId = mLongClickedItemData.get(KeysQuery.STARRED_SESSION_ROOM_ID);
+//                helper.startMapActivity(roomId);
+//                handled = true;
+//                break;
+//            case R.id.menu_star:
+//                String sessionId = mLongClickedItemData.get(KeysQuery.STARRED_SESSION_ID);
+//                Uri sessionUri = ScheduleContract.Sessions.buildSessionUri(sessionId);
+//                helper.setSessionStarred(sessionUri, false, title);
+//                handled = true;
+//                break;
+//            case R.id.menu_share:
+//                // On ICS+ devices, we normally won't reach this as
+//                // ShareActionProvider will handle
+//                // sharing.
+//                helper.shareSession(getActivity(), R.string.share_template, title, hashtags, url);
+//                handled = true;
+//                break;
+//            case R.id.menu_social_stream:
+//                helper.startSocialStream(hashtags);
+//                handled = true;
+//                break;
+//            default:
+//                LOGW(TAG, "Unknown action taken");
+//        }
+//        mActionMode.finish();
         return handled;
     }
 
@@ -269,7 +293,7 @@ public class KeyFragment extends SherlockListFragment implements
     public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
         return false;
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void onReceiveResult(int resultCode, Bundle resultData) {
@@ -281,33 +305,33 @@ public class KeyFragment extends SherlockListFragment implements
 
         switch (resultCode) {
             case KeyAddService.STATUS_ADD_FINISHED: {
-                //TODO update key list
-                Toast.makeText(activity,
-                               "STATUS_ADD_FINISHED",
-                               Toast.LENGTH_LONG).show();
+                // TODO update key list
+                Toast.makeText(activity, "STATUS_ADD_FINISHED", Toast.LENGTH_LONG).show();
+                LOGI(TAG, "STATUS_ADD_FINISHED");
+                getLoaderManager().restartLoader(0, null, this);
                 break;
             }
             case KeyAddService.STATUS_SEARCH_FINISHED: {
-                //TODO update key list
-                Toast.makeText(activity,
-                               "STATUS_SEARCH_FINISHED",
-                               Toast.LENGTH_LONG).show();
+                // TODO update key list
+                Toast.makeText(activity, "STATUS_SEARCH_FINISHED", Toast.LENGTH_LONG).show();
+                LOGI(TAG, "STATUS_SEARCH_FINISHED");
+                getLoaderManager().restartLoader(0, null, this);
                 break;
             }
             case KeyAddService.STATUS_NOTE_FINISHED: {
-                 //TODO update key list
-                 break;
+                // TODO update key list
+                break;
             }
             case KeyAddService.STATUS_ERROR: {
                 // Error happened down in KeyAddService, show as toast.
-                final String errorText = getString(R.string.toast_serchkey_error, resultData
-                        .getString(Intent.EXTRA_TEXT));
+                final String errorText = getString(R.string.toast_serchkey_error,
+                                                   resultData.getString(Intent.EXTRA_TEXT));
                 Toast.makeText(activity, errorText, Toast.LENGTH_LONG).show();
                 break;
             }
         }
 
-//        activity.updateRefreshStatus(mSyncing);
+        // activity.updateRefreshStatus(mSyncing);
     }
 
     /**
@@ -324,237 +348,71 @@ public class KeyFragment extends SherlockListFragment implements
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
-            return getActivity().getLayoutInflater().inflate(R.layout.list_item_schedule_block,
+            LOGI(TAG, "newView()");
+            return getActivity().getLayoutInflater().inflate(R.layout.list_item_key_block,
                                                              parent,
                                                              false);
         }
 
         @Override
         public void bindView(View view, Context context, final Cursor cursor) {
-            final String type = cursor.getString(BlocksQuery.BLOCK_TYPE);
+            LOGI(TAG, "bindView()");
+            
+            final String keyId = cursor.getString(KeysQuery.KEY_ID);
+            final String keyName = cursor.getString(KeysQuery.KEY_NAME);
+            final long keyTime = cursor.getLong(KeysQuery.KEY_SEARCH_TIME);
+            final String keyState = cursor.getString(KeysQuery.KEY_STATE);
+            final String keyTimeString = UIUtils.formatTimeString(keyTime, context);
 
-            final String blockId = cursor.getString(BlocksQuery.BLOCK_ID);
-            final String blockTitle = cursor.getString(BlocksQuery.BLOCK_TITLE);
-            final long blockStart = cursor.getLong(BlocksQuery.BLOCK_START);
-            final long blockEnd = cursor.getLong(BlocksQuery.BLOCK_END);
-            final String blockMeta = cursor.getString(BlocksQuery.BLOCK_META);
-            final String blockTimeString = UIUtils.formatBlockTimeString(blockStart,
-                                                                         blockEnd,
-                                                                         context);
-
-            final TextView timeView = (TextView) view.findViewById(R.id.block_time);
-            final TextView titleView = (TextView) view.findViewById(R.id.block_title);
-            final TextView subtitleView = (TextView) view.findViewById(R.id.block_subtitle);
+            final TextView timeView = (TextView) view.findViewById(R.id.key_search_time);
+            final TextView nameView = (TextView) view.findViewById(R.id.key_name);
+            final TextView stateView = (TextView) view.findViewById(R.id.key_state);
             final ImageButton extraButton = (ImageButton) view.findViewById(R.id.extra_button);
             final View primaryTouchTargetView = view.findViewById(R.id.list_item_middle_container);
 
             final Resources res = getResources();
 
-            String subtitle;
-
-            boolean isLiveStreamed = false;
             primaryTouchTargetView.setOnLongClickListener(null);
             UIUtils.setActivatedCompat(primaryTouchTargetView, false);
 
-            if (ParserUtils.BLOCK_TYPE_SESSION.equals(type)
-                || ParserUtils.BLOCK_TYPE_CODE_LAB.equals(type)) {
-                final int numStarredSessions = cursor.getInt(BlocksQuery.NUM_STARRED_SESSIONS);
-                final String starredSessionId = cursor.getString(BlocksQuery.STARRED_SESSION_ID);
-                View.OnClickListener allSessionsListener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        final Uri sessionsUri = ScheduleContract.Blocks.buildSessionsUri(blockId);
-                        final Intent intent = new Intent(Intent.ACTION_VIEW, sessionsUri);
-                        intent.putExtra(Intent.EXTRA_TITLE, blockTimeString);
-                        startActivity(intent);
-                    }
-                };
-
-                if (numStarredSessions == 0) {
-                    // 0 sessions starred
-                    titleView.setText(getString(R.string.schedule_empty_slot_title_template,
-                                                TextUtils.isEmpty(blockTitle) ? ""
-                                                                             : (" " + blockTitle.toLowerCase())));
-                    titleView.setTextColor(res.getColorStateList(R.color.body_text_1_positive));
-                    subtitle = getString(R.string.schedule_empty_slot_subtitle);
-                    extraButton.setVisibility(View.GONE);
-
-                    primaryTouchTargetView.setOnClickListener(allSessionsListener);
-
-                } else if (numStarredSessions == 1) {
-                    // exactly 1 session starred
-                    final String starredSessionTitle = cursor.getString(BlocksQuery.STARRED_SESSION_TITLE);
-                    titleView.setText(starredSessionTitle);
-                    titleView.setTextColor(res.getColorStateList(R.color.body_text_1));
-                    subtitle = cursor.getString(BlocksQuery.STARRED_SESSION_ROOM_NAME);
-                    if (subtitle == null) {
-                        // TODO: remove this WAR for API not returning rooms for
-                        // code labs
-                        subtitle = getString(starredSessionTitle.contains("Code Lab") ? R.string.codelab_room
-                                                                                     : R.string.unknown_room);
-                    }
-                    isLiveStreamed = !TextUtils.isEmpty(cursor.getString(BlocksQuery.STARRED_SESSION_LIVESTREAM_URL));
-                    extraButton.setVisibility(View.VISIBLE);
-                    extraButton.setOnClickListener(allSessionsListener);
-                    if (mLongClickedItemData != null
-                        && mActionMode != null
-                        && mLongClickedItemData.get(BlocksQuery.STARRED_SESSION_ID, "")
-                                               .equals(starredSessionId)) {
-                        UIUtils.setActivatedCompat(primaryTouchTargetView, true);
-                        mLongClickedView = primaryTouchTargetView;
-                    }
-
-                    primaryTouchTargetView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-//                            final Uri sessionUri = ScheduleContract.Sessions.buildSessionUri(starredSessionId);
-//                            final Intent intent = new Intent(Intent.ACTION_VIEW, sessionUri);
-//                            intent.putExtra(SessionsVendorsMultiPaneActivity.EXTRA_MASTER_URI,
-//                                            ScheduleContract.Blocks.buildSessionsUri(blockId));
-//                            intent.putExtra(Intent.EXTRA_TITLE, blockTimeString);
-//                            startActivity(intent);
-                        }
-                    });
-
-                    primaryTouchTargetView.setOnLongClickListener(new OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-                            if (mActionMode != null) {
-                                // CAB already displayed, ignore
-                                return true;
-                            }
-                            mLongClickedView = primaryTouchTargetView;
-                            String hashtags = cursor.getString(BlocksQuery.STARRED_SESSION_HASHTAGS);
-                            String url = cursor.getString(BlocksQuery.STARRED_SESSION_URL);
-                            String roomId = cursor.getString(BlocksQuery.STARRED_SESSION_ROOM_ID);
-                            mLongClickedItemData = new SparseArray<String>();
-                            mLongClickedItemData.put(BlocksQuery.STARRED_SESSION_ID,
-                                                     starredSessionId);
-                            mLongClickedItemData.put(BlocksQuery.STARRED_SESSION_TITLE,
-                                                     starredSessionTitle);
-                            mLongClickedItemData.put(BlocksQuery.STARRED_SESSION_HASHTAGS, hashtags);
-                            mLongClickedItemData.put(BlocksQuery.STARRED_SESSION_URL, url);
-                            mLongClickedItemData.put(BlocksQuery.STARRED_SESSION_ROOM_ID, roomId);
-                            mActionMode = ActionMode.start(getActivity(), KeyFragment.this);
-                            UIUtils.setActivatedCompat(primaryTouchTargetView, true);
-                            return true;
-                        }
-                    });
-
-                } else {
-                    // 2 or more sessions starred
-                    titleView.setText(getString(R.string.schedule_conflict_title,
-                                                numStarredSessions));
-                    titleView.setTextColor(res.getColorStateList(R.color.body_text_1));
-                    subtitle = getString(R.string.schedule_conflict_subtitle);
-                    extraButton.setVisibility(View.VISIBLE);
-                    extraButton.setOnClickListener(allSessionsListener);
-
-                    primaryTouchTargetView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            final Uri sessionsUri = ScheduleContract.Blocks.buildStarredSessionsUri(blockId);
-                            final Intent intent = new Intent(Intent.ACTION_VIEW, sessionsUri);
-                            intent.putExtra(Intent.EXTRA_TITLE, blockTimeString);
-                            startActivity(intent);
-                        }
-                    });
-                }
-
-                subtitleView.setTextColor(res.getColorStateList(R.color.body_text_2));
-                primaryTouchTargetView.setEnabled(true);
-
-            } else if (ParserUtils.BLOCK_TYPE_KEYNOTE.equals(type)) {
-                final String starredSessionId = cursor.getString(BlocksQuery.STARRED_SESSION_ID);
-                final String starredSessionTitle = cursor.getString(BlocksQuery.STARRED_SESSION_TITLE);
-
-                long currentTimeMillis = UIUtils.getCurrentTime(context);
-                boolean past = (currentTimeMillis > blockEnd && currentTimeMillis < UIUtils.CONFERENCE_END_MILLIS);
-                boolean present = !past && (currentTimeMillis >= blockStart);
-                boolean canViewStream = present && UIUtils.hasHoneycomb();
-
-                isLiveStreamed = true;
-                titleView.setTextColor(canViewStream ? res.getColorStateList(R.color.body_text_1)
-                                                    : res.getColorStateList(R.color.body_text_disabled));
-                subtitleView.setTextColor(canViewStream ? res.getColorStateList(R.color.body_text_2)
-                                                       : res.getColorStateList(R.color.body_text_disabled));
-                subtitle = getString(R.string.keynote_room);
-
-                titleView.setText(starredSessionTitle);
-                extraButton.setVisibility(View.GONE);
-                primaryTouchTargetView.setEnabled(canViewStream);
-                primaryTouchTargetView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        final Uri sessionUri = ScheduleContract.Sessions.buildSessionUri(starredSessionId);
-//                        Intent livestreamIntent = new Intent(Intent.ACTION_VIEW, sessionUri);
-//                        livestreamIntent.setClass(getActivity(), SessionLivestreamActivity.class);
-//                        startActivity(livestreamIntent);
-                    }
-                });
-
-            } else {
-                titleView.setTextColor(res.getColorStateList(R.color.body_text_disabled));
-                subtitleView.setTextColor(res.getColorStateList(R.color.body_text_disabled));
-                subtitle = blockMeta;
-                titleView.setText(blockTitle);
-                extraButton.setVisibility(View.GONE);
-                primaryTouchTargetView.setEnabled(false);
-                primaryTouchTargetView.setOnClickListener(null);
-            }
-
             timeView.setText(DateUtils.formatDateTime(context,
-                                                      blockStart,
+                                                      keyTime,
                                                       DateUtils.FORMAT_SHOW_TIME
                                                               | DateUtils.FORMAT_12HOUR));
+            
+            nameView.setText(keyName);
+            stateView.setText(keyState);
+            extraButton.setVisibility(View.VISIBLE);
 
-            // Show past/present/future and livestream status for this block.
-            UIUtils.updateTimeAndLivestreamBlockUI(context,
-                                                   blockStart,
-                                                   blockEnd,
-                                                   isLiveStreamed,
-                                                   view,
-                                                   titleView,
-                                                   subtitleView,
-                                                   subtitle);
+//            // Show past/present/future and livestream status for this block.
+//            UIUtils.updateTimeAndLivestreamBlockUI(context,
+//                                                   blockStart,
+//                                                   blockEnd,
+//                                                   isLiveStreamed,
+//                                                   view,
+//                                                   titleView,
+//                                                   subtitleView,
+//                                                   subtitle);
         }
     }
 
-    private interface BlocksQuery {
+    private interface KeysQuery {
 
-        String[] PROJECTION                     = {     BaseColumns._ID,
-                                                        ScheduleContract.Blocks.BLOCK_ID,
-                                                        ScheduleContract.Blocks.BLOCK_TITLE,
-                                                        ScheduleContract.Blocks.BLOCK_START,
-                                                        ScheduleContract.Blocks.BLOCK_END,
-                                                        ScheduleContract.Blocks.BLOCK_TYPE,
-                                                        ScheduleContract.Blocks.BLOCK_META,
-                                                        ScheduleContract.Blocks.SESSIONS_COUNT,
-                                                        ScheduleContract.Blocks.NUM_STARRED_SESSIONS,
-                                                        ScheduleContract.Blocks.STARRED_SESSION_ID,
-                                                        ScheduleContract.Blocks.STARRED_SESSION_TITLE,
-                                                        ScheduleContract.Blocks.STARRED_SESSION_ROOM_NAME,
-                                                        ScheduleContract.Blocks.STARRED_SESSION_ROOM_ID,
-                                                        ScheduleContract.Blocks.STARRED_SESSION_HASHTAGS,
-                                                        ScheduleContract.Blocks.STARRED_SESSION_URL,
-                                                        ScheduleContract.Blocks.STARRED_SESSION_LIVESTREAM_URL,};
+        String[] PROJECTION      = {     BaseColumns._ID,
+                                         NoteContract.Keys.KEY_ID,
+                                         NoteContract.Keys.KEY_NAME,
+                                         NoteContract.Keys.KEY_SEARCH_TIME,
+                                         NoteContract.Keys.KEY_STATE,
+                                         NoteContract.Keys.IMAGES_COUNT,
+                                         NoteContract.Keys.WEBS_COUNT,};
 
-        int      _ID                            = 0;
-        int      BLOCK_ID                       = 1;
-        int      BLOCK_TITLE                    = 2;
-        int      BLOCK_START                    = 3;
-        int      BLOCK_END                      = 4;
-        int      BLOCK_TYPE                     = 5;
-        int      BLOCK_META                     = 6;
-        int      SESSIONS_COUNT                 = 7;
-        int      NUM_STARRED_SESSIONS           = 8;
-        int      STARRED_SESSION_ID             = 9;
-        int      STARRED_SESSION_TITLE          = 10;
-        int      STARRED_SESSION_ROOM_NAME      = 11;
-        int      STARRED_SESSION_ROOM_ID        = 12;
-        int      STARRED_SESSION_HASHTAGS       = 13;
-        int      STARRED_SESSION_URL            = 14;
-        int      STARRED_SESSION_LIVESTREAM_URL = 15;
+        int      _ID             = 0;
+        int      KEY_ID          = 1;
+        int      KEY_NAME        = 2;
+        int      KEY_SEARCH_TIME = 3;
+        int      KEY_STATE       = 4;
+        int      KEY_IMAGES_COUNT = 5;
+        int      KEY_WEBS_COUNT       = 6;
     }
 
 }
