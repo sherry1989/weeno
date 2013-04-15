@@ -78,6 +78,7 @@ public class NoteContract {
     private static final String PATH_KEYS = "keys";
     private static final String PATH_IMAGES = "images";
     private static final String PATH_WEBS = "webs";
+    private static final String PATH_STATE = "state";
     
     /**
      * Keys are individual key that user enters.
@@ -109,6 +110,11 @@ public class NoteContract {
         /** Build {@link Uri} for requested {@link #KEY_ID}. */
         public static Uri buildKeyUri(String keyId) {
             return CONTENT_URI.buildUpon().appendPath(keyId).build();
+        }
+        
+        /** Build {@link Uri} for requested {@link #KEY_ID}. */
+        public static Uri buildKeyUriForState(String keyId) {
+            return buildKeyUri(keyId).buildUpon().appendPath(PATH_STATE).build();
         }
 
         /** Read {@link #KEY_ID} from {@link Keys} {@link Uri}. */

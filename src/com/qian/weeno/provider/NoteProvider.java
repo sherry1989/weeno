@@ -48,6 +48,7 @@ public class NoteProvider extends ContentProvider {
     private static final int KEYS_NAME = 102;
     private static final int KEYS_ID_IMAGES = 103;
     private static final int KEYS_ID_WEBS = 104;
+    private static final int KEYS_ID_STATE = 105;
 
     private static final int IMAGES = 200;
     private static final int IMAGES_ID = 201;
@@ -68,6 +69,7 @@ public class NoteProvider extends ContentProvider {
         matcher.addURI(authority, "keys/name/*", KEYS_NAME);
         matcher.addURI(authority, "keys/*/images", KEYS_ID_IMAGES);
         matcher.addURI(authority, "keys/*/webs", KEYS_ID_WEBS);
+        matcher.addURI(authority, "keys/*/state", KEYS_ID_STATE);
 
         matcher.addURI(authority, "images", IMAGES);
         matcher.addURI(authority, "images/*", IMAGES_ID);
@@ -103,11 +105,13 @@ public class NoteProvider extends ContentProvider {
             case KEYS_ID:
                 return Keys.CONTENT_ITEM_TYPE;
             case KEYS_NAME:
-                return Keys.CONTENT_TYPE;
+                return Keys.CONTENT_ITEM_TYPE;
             case KEYS_ID_IMAGES:
                 return Keys.CONTENT_TYPE;
             case KEYS_ID_WEBS:
                 return Keys.CONTENT_TYPE;
+            case KEYS_ID_STATE:
+                return Keys.CONTENT_ITEM_TYPE;
             case IMAGES:
                 return Images.CONTENT_TYPE;
             case IMAGES_ID:
@@ -287,6 +291,12 @@ public class NoteProvider extends ContentProvider {
                 return builder.table(Tables.WEBS)
                         .where(Keys.KEY_ID + "=?", keyId);
             }
+            case KEYS_ID_STATE: {
+                final String keyId = Keys.getKeyId(uri);
+                return builder.table(Tables.KEYS)
+                        .mapToTable(Keys.KEY_STATE, Tables.KEYS)
+                        .where(Keys.KEY_ID + "=?", keyId);
+            }
             default: {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
             }
@@ -334,6 +344,12 @@ public class NoteProvider extends ContentProvider {
                         .mapToTable(Webs.WEB_URL, Tables.IMAGES)
                         .mapToTable(Webs.WEB_STATE, Tables.IMAGES)
                         .where(Qualified.WEBS_KEY_ID + "=?", keyId);
+            }
+            case KEYS_ID_STATE: {
+                final String keyId = Keys.getKeyId(uri);
+                return builder.table(Tables.KEYS)
+                        .mapToTable(Keys.KEY_STATE, Tables.KEYS)
+                        .where(Keys.KEY_ID + "=?", keyId);
             }
             case IMAGES: {
                 return builder.table(Tables.IMAGES_JOIN_KEYS)

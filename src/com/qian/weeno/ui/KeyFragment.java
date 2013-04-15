@@ -176,28 +176,19 @@ public class KeyFragment extends SherlockListFragment implements
             return;
         }
         
-        LOGI(TAG, "before currentTime set ");
-
-        long currentTime = UIUtils.getCurrentTime(getActivity());
-        
-        LOGI(TAG, "after currentTime set, currentTime is " + currentTime);
-        
+        long currentTime = UIUtils.getCurrentTime(getActivity());       
         int firstNowPosition = ListView.INVALID_POSITION;
-        
-        LOGI(TAG, "before new sections, currentTime is " + currentTime);
 
         List<SimpleSectionedListAdapter.Section> sections = new ArrayList<SimpleSectionedListAdapter.Section>();
-        
-        LOGI(TAG, "after new sections.");
         
         cursor.moveToFirst();
         long previousSearchTime = -1;
         long searchTime;
         while (!cursor.isAfterLast()) {
             searchTime = cursor.getLong(KeysQuery.KEY_SEARCH_TIME);
-            LOGI(TAG, "onLoadFinished(), searchTime is " + searchTime);
+            LOGD(TAG, "onLoadFinished(), searchTime is " + searchTime);
             if (!UIUtils.isSameDay(previousSearchTime, searchTime)) {
-                LOGI(TAG, "not same day, add section, position is " + cursor.getPosition());
+                LOGD(TAG, "not same day, add section, position is " + cursor.getPosition());
                 sections.add(new SimpleSectionedListAdapter.Section(cursor.getPosition(),
                                                                     DateUtils.formatDateTime(getActivity(),
                                                                                              searchTime,

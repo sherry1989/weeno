@@ -91,8 +91,9 @@ public class KeyAddService extends IntentService {
 
         /**
          * get the key user entered to search, first, add the key to the
-         * database, and show the key list in the {@link KeyFragment}, third,
-         * send request to the server to search the key.
+         * database, and show the key list in the {@link KeyFragment}, 
+         * second, send request to the server to search the key and insert key related information to database,
+         * third, update the key's state.
          */
         if (ACTION_ADD_KEY.equals(action)) {
             final String keyName = intent.getStringExtra(KeyAddService.EXTRA_KEY_NAME);
@@ -106,7 +107,7 @@ public class KeyAddService extends IntentService {
                 receiver.send(STATUS_ADD_FINISHED, Bundle.EMPTY);
             }
 
-            // --step 2. send request to the server to search the key
+            // --step 2. send request to the server to search the key and insert key related information to database
             try {
                 final ContentResolver resolver = mContext.getContentResolver();
                 ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
@@ -125,10 +126,6 @@ public class KeyAddService extends IntentService {
                 catch (OperationApplicationException e) {
                     throw new RuntimeException("Problem applying batch operation", e);
                 }
-
-                if (receiver != null) {
-                    receiver.send(STATUS_SEARCH_FINISHED, Bundle.EMPTY);
-                }
             }
             catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -144,8 +141,28 @@ public class KeyAddService extends IntentService {
                 
                 e.printStackTrace();
             }
+            
+            // --step 3. update the key's state
+            updateKey(keyId);
+            LOGI(TAG, "Finish update key, keyId is " + keyId);
+            
+            if (receiver != null) {
+                receiver.send(STATUS_SEARCH_FINISHED, Bundle.EMPTY);
+            }
+            
             return;
         }
+    }
+
+    private int updateKey(String keyId) {
+        // TODO Auto-generated method stub
+        
+        Uri stateURI = stateUriforKey(keyId);
+        
+        ContentValues values = new ContentValues();
+        values.put(KeysTable.STATE, KeysTable.COMPLETE_SEARCH);
+               
+        return getContentResolver().update(stateURI, values, null, null);
     }
 
     private Uri addToDB(String keyName, long keyTime, String keyId) {
@@ -165,6 +182,10 @@ public class KeyAddService extends IntentService {
         // TODO Auto-generated method stub
         String hashKey = Hash.md5sum(keyName + keyTime);
         return NoteContract.Keys.generateKeyId(hashKey);
+    }
+    
+    private Uri stateUriforKey (String keyId) {
+        return NoteContract.addCallerIsSyncAdapterParameter(NoteContract.Keys.buildKeyUriForState(keyId));
     }
 
     private SearchKeyResponse getResForKey(String keyName) throws IOException {
@@ -248,8 +269,9 @@ public class KeyAddService extends IntentService {
         String STATE       = NoteContract.Keys.KEY_STATE;
 
         String NEED_SEARCH = NoteContract.Keys.KEY_STATE_NEED_SEARCH;
+        String COMPLETE_SEARCH = NoteContract.Keys.KEY_STATE_COMPLETE_SEARCH;
 
-        Uri    CONTENT_URI = NoteContract.addCallerIsSyncAdapterParameter(Keys.CONTENT_URI);
+        Uri    CONTENT_URI = NoteContract.addCallerIsSyncAdapterParameter(NoteContract.Keys.CONTENT_URI);
 
     }
 
