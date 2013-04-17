@@ -19,7 +19,7 @@
     <style name="NoParent" />
 
     <!-- Root styles that vary by API level -->
-<!--     <style name="FrameworkRoot.Theme" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="FrameworkRoot.Theme" parent="Theme.Sherlock.Light.DarkActionBar">
         API 11+ (compatibility)
         <item name="buttonBarStyle">@style/Compat.ButtonBar</item>
         <item name="buttonBarButtonStyle">@style/Compat.ButtonBarButton</item>
@@ -34,17 +34,17 @@
     <style name="FrameworkRoot.ActionBar.TitleText" parent="TextAppearance.Sherlock.Widget.ActionBar.Title.Inverse" />
     <style name="FrameworkRoot.ActionBar.TabBar" parent="Widget.Sherlock.Light.ActionBar.TabBar.Inverse" />
     <style name="FrameworkRoot.ActionBar.TabText" parent="Widget.Sherlock.Light.ActionBar.TabText.Inverse" />
-    <style name="FrameworkRoot.ActionBar.TabView" parent="Widget.Sherlock.Light.ActionBar.TabView.Inverse" /> -->
+    <style name="FrameworkRoot.ActionBar.TabView" parent="Widget.Sherlock.Light.ActionBar.TabView.Inverse" />
 
     <!-- Immediate parent theme to specify base values for custom attributes -->
-<!--     <style name="Theme.Base" parent="FrameworkRoot.Theme">
+    <style name="Theme.Base" parent="FrameworkRoot.Theme">
         <item name="textHeaderMaxLines">@integer/text_header_max_lines</item>
         <item name="trackAbstractMaxLines">@integer/track_abstract_max_lines</item>
         <item name="activatableItemBackground">@drawable/activatable_item_background</item>
-    </style> -->
+    </style>
 
     <!-- Base themes for the app -->
-<!--     <style name="Theme.Iosched" parent="Theme.Base">
+    <style name="Theme.Iosched" parent="Theme.Base">
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowContentOverlay">@drawable/actionbar_shadow</item>
         <item name="windowContentOverlay">@drawable/actionbar_shadow</item>
@@ -60,33 +60,33 @@
 
     <style name="Theme.Iosched.GreyBackground" parent="Theme.Iosched">
         <item name="android:windowBackground">@drawable/grey_background_pattern</item>
-    </style> -->
+    </style>
 
     <!-- Home -->
-<!--     <style name="Theme.Iosched.Home" parent="Theme.Iosched">
+    <style name="Theme.Iosched.Home" parent="Theme.Iosched">
         <item name="android:windowBackground">@drawable/grey_background_pattern</item>
         <item name="android:actionBarStyle">@style/ActionBar.Home</item>
         <item name="actionBarStyle">@style/ActionBar.Home</item>
-    </style> -->
+    </style>
 
-<!--     <style name="ActionBar.Home" parent="ActionBar">
+    <style name="ActionBar.Home" parent="ActionBar">
         <item name="android:displayOptions">showHome|useLogo|disableHome</item>
         <item name="displayOptions">showHome|useLogo|disableHome</item>
-    </style> -->
+    </style>
 
     <!-- Account chooser -->
-<!--     <style name="Theme.Iosched.Accounts" parent="Theme.Iosched">
+    <style name="Theme.Iosched.Accounts" parent="Theme.Iosched">
         <item name="android:actionBarStyle">@style/ActionBar.Accounts</item>
         <item name="actionBarStyle">@style/ActionBar.Accounts</item>
-    </style> -->
+    </style>
 
-<!--     <style name="ActionBar.Accounts" parent="ActionBar">
+    <style name="ActionBar.Accounts" parent="ActionBar">
         <item name="android:displayOptions">showHome|useLogo</item>
         <item name="displayOptions">showHome|useLogo</item>
-    </style> -->
+    </style>
 
     <!-- Action bar -->
-<!--     <style name="ActionBar" parent="FrameworkRoot.ActionBar">
+    <style name="ActionBar" parent="FrameworkRoot.ActionBar">
         <item name="android:background">@drawable/actionbar_background</item>
         <item name="background">@drawable/actionbar_background</item>
         <item name="android:icon">@drawable/actionbar_icon</item>
@@ -111,13 +111,13 @@
 
     <style name="ActionBar.TabView" parent="FrameworkRoot.ActionBar.TabView">
         <item name="android:background">@drawable/tab_white_ab</item>
-    </style> -->
+    </style>
 
     <!-- Live stream -->
-<!--     <style name="Theme.Iosched.Livestream" parent="Theme.Iosched.GreyBackground">
+    <style name="Theme.Iosched.Livestream" parent="Theme.Iosched.GreyBackground">
         <item name="android:actionBarTabBarStyle">@style/FrameworkRoot.ActionBar.TabBar</item>
         <item name="android:actionBarTabTextStyle">@style/FrameworkRoot.ActionBar.TabText</item>
-    </style> -->
+    </style>
 
     <!-- List views and list items -->
     <style name="ListItemContainerBase">
@@ -128,8 +128,8 @@
     <!-- SimpleListItems are items whose containers provides the appropriate padding, and
          usually the container and content are a single view. -->
     <style name="SimpleListItem" parent="ListItemContainerBase">
-        <!-- <item name="android:paddingLeft">?listPreferredItemPaddingLeft</item>
-        <item name="android:paddingRight">?listPreferredItemPaddingRight</item> -->
+        <item name="android:paddingLeft">?listPreferredItemPaddingLeft</item>
+        <item name="android:paddingRight">?listPreferredItemPaddingRight</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
     </style>
@@ -142,8 +142,8 @@
     <style name="ComplexListItem" parent="ListItemContainerBase" />
 
     <style name="ComplexListItemContent">
-        <!-- <item name="android:paddingLeft">?listPreferredItemPaddingLeft</item>
-        <item name="android:paddingRight">?listPreferredItemPaddingRight</item> -->
+        <item name="android:paddingLeft">?listPreferredItemPaddingLeft</item>
+        <item name="android:paddingRight">?listPreferredItemPaddingRight</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
     </style>
@@ -176,20 +176,20 @@
         <item name="android:textColor">@color/body_text_1</item>
         <item name="android:maxLines">?textHeaderMaxLines</item>
         <item name="android:ellipsize">end</item>
-        <!-- <item name="android:textIsSelectable">true</item> -->
+        <item name="android:textIsSelectable">true</item>
     </style>
 
     <style name="TextHeaderSub">
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/body_text_2</item>
-        <!-- <item name="android:textIsSelectable">true</item> -->
+        <item name="android:textIsSelectable">true</item>
     </style>
 
     <style name="TextHeader2">
         <item name="android:textSize">@dimen/text_size_small</item>
         <item name="android:textStyle">bold</item>
-        <!-- <item name="android:textAllCaps">true</item> -->
+        <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/accent_1</item>
         <item name="android:paddingTop">4dp</item>
         <item name="android:paddingBottom">4dp</item>
@@ -200,14 +200,21 @@
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/body_text_1</item>
-        <!-- <item name="android:textIsSelectable">true</item> -->
+        <item name="android:textIsSelectable">true</item>
     </style>
 
     <style name="TextBody">
         <item name="android:textSize">@dimen/text_size_medium</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:textColor">@color/body_text_1</item>
-        <!-- <item name="android:textIsSelectable">true</item> -->
+        <item name="android:textIsSelectable">true</item>
+    </style>
+    
+    <style name="TextURL">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:lineSpacingMultiplier">1.1</item>
+        <item name="android:textColor">@color/body_text_url</item>
+        <item name="android:textIsSelectable">true</item>
     </style>
 
     <!-- What's On section in Home activity -->

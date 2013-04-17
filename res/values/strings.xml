@@ -18,6 +18,7 @@
 
     <string name="title_sessions">Sessions</string>
     <string name="title_session_detail">Session Information</string>
+    <string name="title_note_detail">Key Note Information</string>
     <string name="title_tracks">Tracks</string>
     <string name="title_vendors">Sandbox</string>
     <string name="title_vendor_detail">Company Information</string>
@@ -61,6 +62,9 @@
     <string name="session_links">Links</string>
     <string name="session_requirements">Requirements</string>
     <string name="session_speakers">Speakers</string>
+    
+    <string name="key_images">Images</string>
+    <string name="key_webs">Web</string>
 
     <string name="session_link_main">Web link</string>
     <string name="session_link_youtube">YouTube video</string>

@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -44,37 +45,37 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    /**
-//     * Sets the icon color using some fancy blending mode trickery.
-//     */
-//    protected void setActionBarColor(int color) {
-//        if (color == 0) {
-//            color = 0xffffffff;
-//        }
-//
-//        final Resources res = getResources();
-//        Drawable maskDrawable = res.getDrawable(R.drawable.actionbar_icon_mask);
-//        if (!(maskDrawable instanceof BitmapDrawable)) {
-//            return;
-//        }
-//
-//        Bitmap maskBitmap = ((BitmapDrawable) maskDrawable).getBitmap();
-//        final int width = maskBitmap.getWidth();
-//        final int height = maskBitmap.getHeight();
-//
-//        Bitmap outBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-//        Canvas canvas = new Canvas(outBitmap);
-//        canvas.drawBitmap(maskBitmap, 0, 0, null);
-//
-//        Paint maskedPaint = new Paint();
-//        maskedPaint.setColor(color);
-//        maskedPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
-//
-//        canvas.drawRect(0, 0, width, height, maskedPaint);
-//
-//        BitmapDrawable outDrawable = new BitmapDrawable(res, outBitmap);
-//        getSupportActionBar().setIcon(outDrawable);
-//    }
+    /**
+     * Sets the icon color using some fancy blending mode trickery.
+     */
+    protected void setActionBarColor(int color) {
+        if (color == 0) {
+            color = 0xffffffff;
+        }
+
+        final Resources res = getResources();
+        Drawable maskDrawable = res.getDrawable(R.drawable.actionbar_icon_mask);
+        if (!(maskDrawable instanceof BitmapDrawable)) {
+            return;
+        }
+
+        Bitmap maskBitmap = ((BitmapDrawable) maskDrawable).getBitmap();
+        final int width = maskBitmap.getWidth();
+        final int height = maskBitmap.getHeight();
+
+        Bitmap outBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(outBitmap);
+        canvas.drawBitmap(maskBitmap, 0, 0, null);
+
+        Paint maskedPaint = new Paint();
+        maskedPaint.setColor(color);
+        maskedPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
+
+        canvas.drawRect(0, 0, width, height, maskedPaint);
+
+        BitmapDrawable outDrawable = new BitmapDrawable(res, outBitmap);
+        getSupportActionBar().setIcon(outDrawable);
+    }
 
     /**
      * Converts an intent into a {@link Bundle} suitable for use as fragment arguments.

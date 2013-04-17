@@ -284,12 +284,12 @@ public class NoteProvider extends ContentProvider {
             case KEYS_ID_IMAGES: {
                 final String keyId = Keys.getKeyId(uri);
                 return builder.table(Tables.IMAGES)
-                        .where(Keys.KEY_ID + "=?", keyId);
+                        .where(Images.KEY_ID + "=?", keyId);
             }
             case KEYS_ID_WEBS: {
                 final String keyId = Keys.getKeyId(uri);
                 return builder.table(Tables.WEBS)
-                        .where(Keys.KEY_ID + "=?", keyId);
+                        .where(Images.KEY_ID + "=?", keyId);
             }
             case KEYS_ID_STATE: {
                 final String keyId = Keys.getKeyId(uri);
@@ -338,11 +338,11 @@ public class NoteProvider extends ContentProvider {
             case KEYS_ID_WEBS: {
                 final String keyId = Keys.getKeyId(uri);
                 return builder.table(Tables.WEBS_JOIN_KEYS)
-                        .mapToTable(Webs._ID, Tables.WEBS)
+                        .mapToTable(Webs.WEB_ID, Tables.WEBS)
                         .mapToTable(Webs.WEB_TITLE, Tables.WEBS)
-                        .mapToTable(Webs.WEB_CONTENT, Tables.IMAGES)
-                        .mapToTable(Webs.WEB_URL, Tables.IMAGES)
-                        .mapToTable(Webs.WEB_STATE, Tables.IMAGES)
+                        .mapToTable(Webs.WEB_CONTENT, Tables.WEBS)
+                        .mapToTable(Webs.WEB_URL, Tables.WEBS)
+                        .mapToTable(Webs.WEB_STATE, Tables.WEBS)
                         .where(Qualified.WEBS_KEY_ID + "=?", keyId);
             }
             case KEYS_ID_STATE: {
@@ -364,7 +364,7 @@ public class NoteProvider extends ContentProvider {
             }
             case WEBS: {
                 return builder.table(Tables.WEBS_JOIN_KEYS)
-                        .mapToTable(Webs._ID, Tables.WEBS)
+                        .mapToTable(Webs.WEB_ID, Tables.WEBS)
                         .mapToTable(Webs.KEY_ID, Tables.WEBS);
             }
             case WEBS_ID: {

@@ -28,9 +28,9 @@
     <uses-permission android:name="android.permission.READ_SYNC_STATS" />
 
     <application
+        android:allowBackup="true"
         android:icon="@drawable/icon"
-        android:label="@string/app_name" 
-        android:allowBackup = "true">
+        android:label="@string/app_name" >
         <activity
             android:name="com.qian.weeno.ui.HomeActivity"
             android:label="@string/app_name" >
@@ -42,15 +42,32 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <activity
+            android:name=".ui.phone.NoteDetailActivity"
+            android:label="@string/title_note_detail"
+            android:uiOptions="splitActionBarWhenNarrow" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="vnd.android.cursor.item/vnd.weeno.key" />
+            </intent-filter>
+            <!-- PARENT_ACTIVITY alone is insufficient for Up navigation for this activity -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.phone.NoteDetailActivity" />
+        </activity>
 
         <!-- Data, sync and schedule editing components -->
-        
-         <provider
+
+        <provider
             android:name="com.qian.weeno.provider.NoteProvider"
             android:authorities="com.qian.weeno"
-            android:writePermission="com.qian.weeno.permission.WRITE_NOTE"
+            android:label="@string/app_name"
             android:syncable="true"
-            android:label="@string/app_name" />
+            android:writePermission="com.qian.weeno.permission.WRITE_NOTE" />
 
         <service android:name=".service.KeyAddService" />
     </application>

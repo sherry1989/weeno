@@ -28,6 +28,7 @@
     <dimen name="multipane_padding">16dp</dimen>
     <dimen name="list_scroll_top_offset">16dp</dimen>
     <dimen name="schedule_block_time_width">72dp</dimen>
+    <dimen name="key_block_time_width">72dp</dimen>
     <dimen name="map_multipane_right_padding">48dp</dimen>
     <dimen name="announcements_margin_width">8dp</dimen>
 
@@ -41,6 +42,8 @@
     <dimen name="text_size_diff_large_small">6sp</dimen>
     <dimen name="speaker_image_size">48dp</dimen>
     <dimen name="speaker_image_padding">8dp</dimen>
+    <dimen name="key_image_size">48dp</dimen>
+    <dimen name="key_image_padding">8dp</dimen>
     <dimen name="vendor_image_size">100dp</dimen>
 
     <!-- Google+ -->

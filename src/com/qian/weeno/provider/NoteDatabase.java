@@ -40,7 +40,7 @@ public class NoteDatabase extends SQLiteOpenHelper {
                 + "LEFT OUTER JOIN keys ON images.key_id=keys.key_id";
         
         String WEBS_JOIN_KEYS = "webs "
-                + "LEFT OUTER JOIN webs ON webs.key_id=keys.key_id";
+                + "LEFT OUTER JOIN keys ON webs.key_id=keys.key_id";
     }
     
     /** {@code REFERENCES} clauses. */

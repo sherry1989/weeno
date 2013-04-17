@@ -40,12 +40,13 @@
             android:duplicateParentState="true"
             android:padding="8dp">
             <TextView android:id="@+id/key_search_time"
-                android:textIsSelectable="true"
+                android:textIsSelectable="false"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_small"
                 android:textColor="@color/body_text_1"
-                android:paddingTop="@dimen/text_size_diff_large_small" />
+                android:paddingTop="@dimen/text_size_diff_large_small" 
+                />
         </FrameLayout>
         
         <!-- android:foreground="?activatableItemBackground" -->
@@ -60,11 +61,11 @@
             android:paddingTop="8dp"
             style="@style/ListItemTitle" />
         
-<!--         			android:layout_marginLeft="?listPreferredItemPaddingLeft"
-            android:layout_marginRight="?listPreferredItemPaddingRight" -->
+<!--        			android:layout_marginLeft="?listPreferredItemPaddingLeft"
+            android:layout_marginRight="?listPreferredItemPaddingRight" 			 -->
 
         <TextView android:id="@+id/key_state"
-            android:textIsSelectable="true"
+            android:textIsSelectable="false"
             android:layout_below="@id/key_name"
             android:layout_alignLeft="@id/key_name"
             android:layout_alignRight="@id/key_name"

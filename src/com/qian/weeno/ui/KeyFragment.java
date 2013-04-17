@@ -41,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+
 import com.google.android.apps.iosched.util.SessionsHelper;
 import com.google.android.apps.iosched.util.actionmodecompat.ActionMode;
 import com.google.android.apps.iosched.provider.ScheduleContract;
@@ -118,7 +119,7 @@ public class KeyFragment extends SherlockListFragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         LOGI(TAG, "onActivityCreated()");
-        
+
         super.onActivityCreated(savedInstanceState);
 
         // In support library r8, calling initLoader for a fragment in a
@@ -175,12 +176,12 @@ public class KeyFragment extends SherlockListFragment implements
         if (getActivity() == null) {
             return;
         }
-        
-        long currentTime = UIUtils.getCurrentTime(getActivity());       
+
+        long currentTime = UIUtils.getCurrentTime(getActivity());
         int firstNowPosition = ListView.INVALID_POSITION;
 
         List<SimpleSectionedListAdapter.Section> sections = new ArrayList<SimpleSectionedListAdapter.Section>();
-        
+
         cursor.moveToFirst();
         long previousSearchTime = -1;
         long searchTime;
@@ -200,7 +201,7 @@ public class KeyFragment extends SherlockListFragment implements
             // if we're currently in this block, or we're not in a block
             // and this
             // block is in the future, then this is the scroll position
-                && ((searchTime < currentTime/* && currentTime < blockEnd*/) || searchTime > currentTime)) {
+                && ((searchTime < currentTime/* && currentTime < blockEnd */) || searchTime > currentTime)) {
                 firstNowPosition = cursor.getPosition();
             }
             previousSearchTime = searchTime;
@@ -228,37 +229,43 @@ public class KeyFragment extends SherlockListFragment implements
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         SessionsHelper helper = new SessionsHelper(getActivity());
-//        String title = mLongClickedItemData.get(KeysQuery.STARRED_SESSION_TITLE);
-//        String hashtags = mLongClickedItemData.get(KeysQuery.STARRED_SESSION_HASHTAGS);
-//        String url = mLongClickedItemData.get(KeysQuery.STARRED_SESSION_URL);
+        // String title =
+        // mLongClickedItemData.get(KeysQuery.STARRED_SESSION_TITLE);
+        // String hashtags =
+        // mLongClickedItemData.get(KeysQuery.STARRED_SESSION_HASHTAGS);
+        // String url = mLongClickedItemData.get(KeysQuery.STARRED_SESSION_URL);
         boolean handled = false;
-//        switch (item.getItemId()) {
-//            case R.id.menu_map:
-//                String roomId = mLongClickedItemData.get(KeysQuery.STARRED_SESSION_ROOM_ID);
-//                helper.startMapActivity(roomId);
-//                handled = true;
-//                break;
-//            case R.id.menu_star:
-//                String sessionId = mLongClickedItemData.get(KeysQuery.STARRED_SESSION_ID);
-//                Uri sessionUri = ScheduleContract.Sessions.buildSessionUri(sessionId);
-//                helper.setSessionStarred(sessionUri, false, title);
-//                handled = true;
-//                break;
-//            case R.id.menu_share:
-//                // On ICS+ devices, we normally won't reach this as
-//                // ShareActionProvider will handle
-//                // sharing.
-//                helper.shareSession(getActivity(), R.string.share_template, title, hashtags, url);
-//                handled = true;
-//                break;
-//            case R.id.menu_social_stream:
-//                helper.startSocialStream(hashtags);
-//                handled = true;
-//                break;
-//            default:
-//                LOGW(TAG, "Unknown action taken");
-//        }
-//        mActionMode.finish();
+        // switch (item.getItemId()) {
+        // case R.id.menu_map:
+        // String roomId =
+        // mLongClickedItemData.get(KeysQuery.STARRED_SESSION_ROOM_ID);
+        // helper.startMapActivity(roomId);
+        // handled = true;
+        // break;
+        // case R.id.menu_star:
+        // String sessionId =
+        // mLongClickedItemData.get(KeysQuery.STARRED_SESSION_ID);
+        // Uri sessionUri =
+        // ScheduleContract.Sessions.buildSessionUri(sessionId);
+        // helper.setSessionStarred(sessionUri, false, title);
+        // handled = true;
+        // break;
+        // case R.id.menu_share:
+        // // On ICS+ devices, we normally won't reach this as
+        // // ShareActionProvider will handle
+        // // sharing.
+        // helper.shareSession(getActivity(), R.string.share_template, title,
+        // hashtags, url);
+        // handled = true;
+        // break;
+        // case R.id.menu_social_stream:
+        // helper.startSocialStream(hashtags);
+        // handled = true;
+        // break;
+        // default:
+        // LOGW(TAG, "Unknown action taken");
+        // }
+        // mActionMode.finish();
         return handled;
     }
 
@@ -373,7 +380,44 @@ public class KeyFragment extends SherlockListFragment implements
             
             nameView.setText(keyName);
             stateView.setText(keyState);
-            extraButton.setVisibility(View.VISIBLE);
+            
+            LOGI(TAG, "keyState is " + keyState);
+            
+            
+            if (keyState.equals(KeysQuery.NEED_SEARCH))
+            {
+                LOGI(TAG, "keyState equals KeysQuery.NEED_SEARCH");
+                extraButton.setVisibility(View.GONE);
+            }
+            else if (keyState.equals(KeysQuery.COMPLETE_SEARCH))
+            {
+                LOGI(TAG, "keyState equals KeysQuery.COMPLETE_SEARCH");
+                extraButton.setVisibility(View.VISIBLE);
+                
+                extraButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        LOGI(TAG, "extraButton.onClick()");
+                        final Uri keyUri = NoteContract.Keys.buildKeyUri(keyId);
+                        final Intent intent = new Intent(Intent.ACTION_VIEW, keyUri);
+                        intent.putExtra(NoteContract.Keys.KEY_NAME, keyName);
+                        intent.putExtra(NoteContract.Keys.KEY_SEARCH_TIME, keyTime);
+                        startActivity(intent);
+                    }
+                });
+            }
+            
+
+            
+//            extraButton.setOnClickListener(allSessionsListener);
+//            if (mLongClickedItemData != null && mActionMode != null
+//                    && mLongClickedItemData.get(BlocksQuery.STARRED_SESSION_ID, "").equals(
+//                            starredSessionId)) {
+//                UIUtils.setActivatedCompat(primaryTouchTargetView, true);
+//                mLongClickedView = primaryTouchTargetView;
+//            }
+            
+
 
 //            // Show past/present/future and livestream status for this block.
 //            UIUtils.updateTimeAndLivestreamBlockUI(context,
@@ -389,21 +433,25 @@ public class KeyFragment extends SherlockListFragment implements
 
     private interface KeysQuery {
 
-        String[] PROJECTION      = {     BaseColumns._ID,
-                                         NoteContract.Keys.KEY_ID,
-                                         NoteContract.Keys.KEY_NAME,
-                                         NoteContract.Keys.KEY_SEARCH_TIME,
-                                         NoteContract.Keys.KEY_STATE,
-                                         NoteContract.Keys.IMAGES_COUNT,
-                                         NoteContract.Keys.WEBS_COUNT,};
+        String[] PROJECTION       = {     BaseColumns._ID,
+                                          NoteContract.Keys.KEY_ID,
+                                          NoteContract.Keys.KEY_NAME,
+                                          NoteContract.Keys.KEY_SEARCH_TIME,
+                                          NoteContract.Keys.KEY_STATE,
+                                          NoteContract.Keys.IMAGES_COUNT,
+                                          NoteContract.Keys.WEBS_COUNT,};
 
-        int      _ID             = 0;
-        int      KEY_ID          = 1;
-        int      KEY_NAME        = 2;
-        int      KEY_SEARCH_TIME = 3;
-        int      KEY_STATE       = 4;
+        int      _ID              = 0;
+        int      KEY_ID           = 1;
+        int      KEY_NAME         = 2;
+        int      KEY_SEARCH_TIME  = 3;
+        int      KEY_STATE        = 4;
         int      KEY_IMAGES_COUNT = 5;
-        int      KEY_WEBS_COUNT       = 6;
+        int      KEY_WEBS_COUNT   = 6;
+        
+        String NEED_SEARCH = NoteContract.Keys.KEY_STATE_NEED_SEARCH;
+        String COMPLETE_SEARCH = NoteContract.Keys.KEY_STATE_COMPLETE_SEARCH;
+
     }
 
 }

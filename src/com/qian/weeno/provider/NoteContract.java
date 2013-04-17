@@ -1,6 +1,5 @@
 package com.qian.weeno.provider;
 
-import com.google.android.apps.iosched.provider.ScheduleContract.Tracks;
 import com.google.android.apps.iosched.util.ParserUtils;
 
 import android.net.Uri;
@@ -88,9 +87,9 @@ public class NoteContract {
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_KEYS).build();
 
         public static final String CONTENT_TYPE =
-                "vnd.android.cursor.dir/vnd.weenoo.key";
+                "vnd.android.cursor.dir/vnd.weeno.key";
         public static final String CONTENT_ITEM_TYPE =
-                "vnd.android.cursor.item/vnd.weenoo.key";
+                "vnd.android.cursor.item/vnd.weeno.key";
         
         /** Key's possible state. */
         public static final String KEY_STATE_NEED_SEARCH = "need_search";
@@ -111,6 +110,23 @@ public class NoteContract {
         public static Uri buildKeyUri(String keyId) {
             return CONTENT_URI.buildUpon().appendPath(keyId).build();
         }
+        
+        /**
+         * Build {@link Uri} that references any {@link Images} associated
+         * with the requested {@link #KEY_ID}.
+         */
+        public static Uri buildImagesDirUri(String keyId) {
+            return CONTENT_URI.buildUpon().appendPath(keyId).appendPath(PATH_IMAGES).build();
+        }
+        
+        /**
+         * Build {@link Uri} that references any {@link Webs} associated
+         * with the requested {@link #KEY_ID}.
+         */
+        public static Uri buildWebsDirUri(String keyId) {
+            return CONTENT_URI.buildUpon().appendPath(keyId).appendPath(PATH_WEBS).build();
+        }
+        
         
         /** Build {@link Uri} for requested {@link #KEY_ID}. */
         public static Uri buildKeyUriForState(String keyId) {
@@ -145,9 +161,9 @@ public class NoteContract {
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_IMAGES).build();
 
         public static final String CONTENT_TYPE =
-                "vnd.android.cursor.dir/vnd.iosched.image";
+                "vnd.android.cursor.dir/vnd.weeno.image";
         public static final String CONTENT_ITEM_TYPE =
-                "vnd.android.cursor.item/vnd.iosched.image";
+                "vnd.android.cursor.item/vnd.weeno.image";
         
         /** {@link Keys#KEY_ID} that this image belongs to. */
         public static final String KEY_ID = "key_id";
@@ -191,9 +207,9 @@ public class NoteContract {
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_WEBS).build();
 
         public static final String CONTENT_TYPE =
-                "vnd.android.cursor.dir/vnd.iosched.web";
+                "vnd.android.cursor.dir/vnd.weeno.web";
         public static final String CONTENT_ITEM_TYPE =
-                "vnd.android.cursor.item/vnd.iosched.web";
+                "vnd.android.cursor.item/vnd.weeno.web";
         
         /** {@link Keys#KEY_ID} that this web page belongs to. */
         public static final String KEY_ID = "key_id";

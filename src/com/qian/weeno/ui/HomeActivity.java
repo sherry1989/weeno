@@ -51,7 +51,7 @@ import static com.qian.weeno.util.LogUtils.makeLogTag;
  * <p>
  * This activity uses different layouts to present its various fragments,
  * depending on the device configuration. {@link KeyFragment},
- * {@link NoteFragment}, and {@link WebPageFragment} are always available to the
+ * {@link NoteDetailFragment}, and {@link WebPageFragment} are always available to the
  * user. {@link WhatsOnFragment} is always available on tablets and phones in
  * portrait, but is hidden on phones held in landscape.
  * 
@@ -72,7 +72,7 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
     private Object              mSyncObserverHandle;
 
     private KeyFragment         mKeyFragment;
-    private NoteFragment        mNoteFragment;
+//    private NoteDetailFragment        mNoteFragment;
     private WebPageFragment     mWebPageFragment;
 
     private ViewPager           mViewPager;
@@ -106,7 +106,7 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
             final ActionBar actionBar = getSupportActionBar();
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
             actionBar.addTab(actionBar.newTab().setText(R.string.title_key).setTabListener(this));
-            actionBar.addTab(actionBar.newTab().setText(R.string.title_note).setTabListener(this));
+//            actionBar.addTab(actionBar.newTab().setText(R.string.title_note).setTabListener(this));
             actionBar.addTab(actionBar.newTab()
                                       .setText(R.string.title_webpage)
                                       .setTabListener(this));
@@ -114,7 +114,7 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
             homeScreenLabel = getString(R.string.title_key);
 
         } else {
-            mNoteFragment = (NoteFragment) fm.findFragmentById(R.id.fragment_note);
+//            mNoteFragment = (NoteDetailFragment) fm.findFragmentById(R.id.fragment_note);
             mKeyFragment = (KeyFragment) fm.findFragmentById(R.id.fragment_key);
             mWebPageFragment = (WebPageFragment) fm.findFragmentById(R.id.fragment_webpage);
 
@@ -218,9 +218,9 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
                 titleId = R.string.title_key;
                 break;
             case 1:
-                titleId = R.string.title_note;
-                break;
-            case 2:
+//                titleId = R.string.title_note;
+//                break;
+//            case 2:
                 titleId = R.string.title_webpage;
                 break;
         }
@@ -236,7 +236,7 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+//        super.onSaveInstanceState(outState);
 
         // Since the pager fragments don't have known tags or IDs, the only way
         // to persist the
@@ -251,9 +251,9 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
         // The outcome of all this is that the "Refresh" menu button refreshes
         // the stream across
         // orientation changes.
-        if (mWebPageFragment != null) {
-            getSupportFragmentManager().putFragment(outState, "stream_fragment", mWebPageFragment);
-        }
+//        if (mWebPageFragment != null) {
+//            getSupportFragmentManager().putFragment(outState, "stream_fragment", mWebPageFragment);
+//        }
     }
 
     @Override
@@ -277,9 +277,9 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
                     return (mKeyFragment = new KeyFragment());
 
                 case 1:
-                    return (mNoteFragment = new NoteFragment());
-
-                case 2:
+//                    return (mNoteFragment = new NoteDetailFragment());
+//
+//                case 2:
                     return (mWebPageFragment = new WebPageFragment());
             }
             return null;
@@ -287,7 +287,7 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
 
         @Override
         public int getCount() {
-            return 3;
+            return 2;
         }
     }
 
