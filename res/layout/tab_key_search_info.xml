@@ -12,47 +12,66 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-  -->
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true" >
 
-    <LinearLayout android:orientation="vertical"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/content_padding_normal"
-        android:background="@color/background_white">
+        android:background="@color/background_white"
+        android:orientation="vertical"
+        android:padding="@dimen/content_padding_normal" >
 
-        <TextView android:id="@+id/session_abstract"
-            android:textIsSelectable="false"
+        <TextView
+            android:id="@+id/session_abstract"
+            style="@style/TextBody"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/TextBody" />
+            android:textIsSelectable="false" />
 
-        <LinearLayout android:id="@+id/key_images_block"
-            android:orientation="vertical"
+        <LinearLayout
+            android:id="@+id/key_images_block"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/element_spacing_normal">
-            <TextView android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/TextHeader2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/key_images"
-                style="@style/TextHeader2" />
-        </LinearLayout>
-        
-        <LinearLayout android:id="@+id/key_webs_block"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/element_spacing_normal">
-            <TextView android:layout_width="match_parent"
+                android:text="@string/key_images" />
+
+            <GridLayout
+                android:id="@+id/key_images_grid"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/key_webs"
-                style="@style/TextHeader2" />
+                android:layout_marginBottom="@dimen/element_spacing_normal"
+                android:layout_marginTop="@dimen/element_spacing_normal"
+                android:columnCount="4"
+                android:orientation="horizontal" >
+            </GridLayout>
         </LinearLayout>
 
-<!--         <LinearLayout android:id="@+id/session_links_block"
+        <LinearLayout
+            android:id="@+id/key_webs_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/element_spacing_normal"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/TextHeader2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/key_webs" />
+        </LinearLayout>
+
+        <!--
+             <LinearLayout android:id="@+id/session_links_block"
             android:orientation="vertical"
             android:layout_marginTop="@dimen/element_spacing_normal"
             android:layout_width="match_parent"
@@ -67,16 +86,18 @@
                 android:showDividers="middle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-        </LinearLayout> -->
+        </LinearLayout>
+        -->
 
-        <TextView android:id="@android:id/empty"
+        <TextView
+            android:id="@android:id/empty"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="@string/empty_session_detail"
             android:textAppearance="?android:textAppearanceSmall"
-            android:gravity="center"
             android:visibility="gone" />
-
     </LinearLayout>
+
 </ScrollView>

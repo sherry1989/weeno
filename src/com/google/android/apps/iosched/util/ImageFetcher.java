@@ -36,6 +36,7 @@ import java.net.URL;
 
 import static com.qian.weeno.util.LogUtils.LOGD;
 import static com.qian.weeno.util.LogUtils.LOGE;
+import static com.qian.weeno.util.LogUtils.LOGI;
 import static com.qian.weeno.util.LogUtils.makeLogTag;
 
 /**
@@ -307,12 +308,15 @@ public class ImageFetcher extends ImageWorker {
             out = new BufferedOutputStream(outputStream, IO_BUFFER_SIZE_BYTES);
 
             int b;
+            long count = 0;
             while ((b = in.read()) != -1) {
+                count ++;
                 out.write(b);
             }
+            LOGI(TAG, "count" + count);
             return true;
         } catch (final IOException e) {
-            LOGE(TAG, "Error in downloadBitmap - " + e);
+            LOGE(TAG, "Error in downloadBitmap(downloadUrlToStream) - " + e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -362,7 +366,7 @@ public class ImageFetcher extends ImageWorker {
             }
             return tempFile;
         } catch (final IOException e) {
-            LOGE(TAG, "Error in downloadBitmap - " + e);
+            LOGE(TAG, "Error in downloadBitmap(downloadBitmapToFile) - " + e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();

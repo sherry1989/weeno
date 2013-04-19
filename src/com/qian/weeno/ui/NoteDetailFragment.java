@@ -72,6 +72,8 @@ public class NoteDetailFragment extends SherlockFragment implements
 
     // Set this boolean extra to true to show a variable height header
     public static final String  EXTRA_VARIABLE_HEIGHT_HEADER = "com.google.android.iosched.extra.VARIABLE_HEIGHT_HEADER";
+    
+    private static final int DISPLAY_IMGNUM = 12;
 
     private String              mKeyId;
     private Uri                 mKeyUri;
@@ -109,6 +111,8 @@ public class NoteDetailFragment extends SherlockFragment implements
         mkeyTime = intent.getLongExtra(NoteContract.Keys.KEY_SEARCH_TIME, -1);
 
         LOGI(TAG, "keyUri is " + mKeyUri);
+        LOGI(TAG, "mKeyName is " + mKeyName);
+        LOGI(TAG, "mkeyTime is " + mkeyTime);
 
         if (mKeyUri == null) {
             return;
@@ -377,27 +381,48 @@ public class NoteDetailFragment extends SherlockFragment implements
         LOGI(TAG, "onImageQueryComplete()");
 
         mImagesCursor = true;
-        // TODO: remove existing speakers from layout, since this cursor might
-        // be from a data change
+
         final ViewGroup imagesGroup = (ViewGroup) mRootView.findViewById(R.id.key_images_block);
+        final ViewGroup imagesGrid = (ViewGroup) mRootView.findViewById(R.id.key_images_grid);
         final LayoutInflater inflater = getActivity().getLayoutInflater();
 
         boolean hasImages = false;
+        
+        final Context context = mRootView.getContext();
+        
+        int imageNum = 0;
 
-        while (cursor.moveToNext()) {
+        while (cursor.moveToNext() && imageNum < DISPLAY_IMGNUM) {
 
             final String imageUrl = cursor.getString(ImagesQuery.IMAGE_URL);
             final String imageState = cursor.getString(ImagesQuery.IMAGE_STATE);
 
             LOGI(TAG, "imageUrl is " + imageUrl);
 
-            final View imageView = inflater.inflate(R.layout.image_detail, imagesGroup, false);
+            final View imageView = inflater.inflate(R.layout.image_detail, imagesGrid, false);
             final ImageView keyImageView = (ImageView) imageView.findViewById(R.id.key_image);
 
             if (!TextUtils.isEmpty(imageUrl)) {
                 mImageFetcher.loadThumbnailImage(imageUrl,
                                                  keyImageView,
                                                  R.drawable.person_image_empty);
+                
+                keyImageView.setEnabled(true);
+
+                keyImageView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // show the web page related to the web page
+                        LOGI(TAG, "get request to open url " + imageUrl);
+                        fireLinkEvent(WebsQuery.LINKS_TITLES[1]);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(imageUrl));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                        UIUtils.safeOpenLink(context, intent);
+                    }
+                });
+            } else {
+                keyImageView.setEnabled(false);
+                keyImageView.setOnClickListener(null);
             }
 
             imageView.setLongClickable(true);
@@ -409,11 +434,14 @@ public class NoteDetailFragment extends SherlockFragment implements
                 }
             });
 
-            imagesGroup.addView(imageView);
+            imagesGrid.addView(imageView);
             hasImages = true;
             mHasSummaryContent = true;
+            
+            imageNum++;
         }
 
+//        imagesGroup.addView(imagesGrid);
         imagesGroup.setVisibility(hasImages ? View.VISIBLE : View.GONE);
 
         // Show empty message when all data is loaded, and nothing to show
@@ -429,8 +457,7 @@ public class NoteDetailFragment extends SherlockFragment implements
         LOGI(TAG, "onWebsQueryComplete()");
 
         mWebsCursor = true;
-        // TODO: remove existing speakers from layout, since this cursor might
-        // be from a data change
+
         final ViewGroup websGroup = (ViewGroup) mRootView.findViewById(R.id.key_webs_block);
         final LayoutInflater inflater = getActivity().getLayoutInflater();
 
@@ -463,7 +490,7 @@ public class NoteDetailFragment extends SherlockFragment implements
                 webHostView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO show the web page related to the web page
+                        // show the web page related to the web page
                         LOGI(TAG, "get request to open url " + webUrl);
                         fireLinkEvent(WebsQuery.LINKS_TITLES[1]);
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(webUrl));

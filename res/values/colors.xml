@@ -19,6 +19,7 @@
     
     <color name="background_white">#ffffffff</color>
     <color name="body_text_url">#ffa9a9a9</color>		<!-- DarkGray -->
+    <color name="image_background">#ff6495ed</color>		<!-- CornflowerBlue -->
     
 
     <!-- Google+ -->

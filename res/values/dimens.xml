@@ -42,8 +42,9 @@
     <dimen name="text_size_diff_large_small">6sp</dimen>
     <dimen name="speaker_image_size">48dp</dimen>
     <dimen name="speaker_image_padding">8dp</dimen>
-    <dimen name="key_image_size">48dp</dimen>
-    <dimen name="key_image_padding">8dp</dimen>
+    <dimen name="key_image_size">64dp</dimen>
+    <dimen name="key_image_padding">4dp</dimen>
+    <dimen name="key_image_margin">4dp</dimen>
     <dimen name="vendor_image_size">100dp</dimen>
 
     <!-- Google+ -->
