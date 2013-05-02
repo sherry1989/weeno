@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuItem.OnActionExpandListener;
@@ -315,7 +317,7 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
     }
 
     private void setupAddKeyItem(Menu menu) {
-        MenuItem addKeyEditItem = menu.findItem(R.id.menu_add_key);
+        final MenuItem addKeyEditItem = menu.findItem(R.id.menu_add_key);
         if (addKeyEditItem != null) {
             final EditText addKeyEditView = (EditText) addKeyEditItem.getActionView();
             if (addKeyEditView != null) {
@@ -363,11 +365,15 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
                             keyAddIntent.putExtra(KeyAddService.EXTRA_STATUS_RECEIVER, mKeyFragment.mReceiver);
                             tempHomeActivity.startService(keyAddIntent);
 
-                            addKeyEditView.clearFocus();
+//                            addKeyEditView.clearFocus();
+                            addKeyEditItem.collapseActionView();
                         }
                         Toast.makeText(tempHomeActivity,
                                        v.getText() + "--" + actionId,
                                        Toast.LENGTH_LONG).show();
+                        
+                       InputMethodManager imm = (InputMethodManager)getSystemService(tempHomeActivity.INPUT_METHOD_SERVICE);   
+                       imm.hideSoftInputFromWindow(v.getWindowToken(), 0);    
 
                         return true;
                     }
@@ -379,12 +385,14 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
                 @Override
                 public boolean onMenuItemActionCollapse(MenuItem item) {
                     // Do something when collapsed
+                    LOGI(TAG, "onMenuItemActionCollapse");
                     return true; // Return true to collapse action view
                 }
 
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem item) {
                     // addKeyEditView.clearFocus();
+                    LOGI(TAG, "onMenuItemActionExpand");
                     return true; // Return true to expand action view
                 }
             });
