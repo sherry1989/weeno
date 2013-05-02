@@ -53,9 +53,9 @@ import static com.qian.weeno.util.LogUtils.makeLogTag;
  * <p>
  * This activity uses different layouts to present its various fragments,
  * depending on the device configuration. {@link KeyFragment},
- * {@link NoteDetailFragment}, and {@link WebPageFragment} are always available to the
- * user. {@link WhatsOnFragment} is always available on tablets and phones in
- * portrait, but is hidden on phones held in landscape.
+ * {@link NoteDetailFragment}, and {@link WebPageFragment} are always available
+ * to the user. {@link WhatsOnFragment} is always available on tablets and
+ * phones in portrait, but is hidden on phones held in landscape.
  * 
  * <p>
  * On phone-size screens, the three fragments are represented by
@@ -74,7 +74,7 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
     private Object              mSyncObserverHandle;
 
     private KeyFragment         mKeyFragment;
-//    private NoteDetailFragment        mNoteFragment;
+    // private NoteDetailFragment mNoteFragment;
     private WebPageFragment     mWebPageFragment;
 
     private ViewPager           mViewPager;
@@ -106,18 +106,22 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
             mViewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.page_margin_width));
 
             final ActionBar actionBar = getSupportActionBar();
-//            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);        //disable tabs in ActionBar
+            // actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD); // disable
+                                                                             // tabs
+                                                                             // in
+                                                                             // ActionBar
             actionBar.addTab(actionBar.newTab().setText(R.string.title_key).setTabListener(this));
-//            actionBar.addTab(actionBar.newTab().setText(R.string.title_note).setTabListener(this));
-//            actionBar.addTab(actionBar.newTab()
-//                                      .setText(R.string.title_webpage)
-//                                      .setTabListener(this));
+            // actionBar.addTab(actionBar.newTab().setText(R.string.title_note).setTabListener(this));
+            // actionBar.addTab(actionBar.newTab()
+            // .setText(R.string.title_webpage)
+            // .setTabListener(this));
 
             homeScreenLabel = getString(R.string.title_key);
 
         } else {
-//            mNoteFragment = (NoteDetailFragment) fm.findFragmentById(R.id.fragment_note);
+            // mNoteFragment = (NoteDetailFragment)
+            // fm.findFragmentById(R.id.fragment_note);
             mKeyFragment = (KeyFragment) fm.findFragmentById(R.id.fragment_key);
             mWebPageFragment = (WebPageFragment) fm.findFragmentById(R.id.fragment_webpage);
 
@@ -220,12 +224,12 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
             case 0:
                 titleId = R.string.title_key;
                 break;
-//            case 1:
-//                titleId = R.string.title_note;
-//                break;
-//            case 2:
-//                titleId = R.string.title_webpage;
-//                break;
+        // case 1:
+        // titleId = R.string.title_note;
+        // break;
+        // case 2:
+        // titleId = R.string.title_webpage;
+        // break;
         }
 
         String title = getString(titleId);
@@ -239,7 +243,7 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
+        // super.onSaveInstanceState(outState);
 
         // Since the pager fragments don't have known tags or IDs, the only way
         // to persist the
@@ -254,9 +258,10 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
         // The outcome of all this is that the "Refresh" menu button refreshes
         // the stream across
         // orientation changes.
-//        if (mWebPageFragment != null) {
-//            getSupportFragmentManager().putFragment(outState, "stream_fragment", mWebPageFragment);
-//        }
+        // if (mWebPageFragment != null) {
+        // getSupportFragmentManager().putFragment(outState, "stream_fragment",
+        // mWebPageFragment);
+        // }
     }
 
     @Override
@@ -279,11 +284,11 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
                 case 0:
                     return (mKeyFragment = new KeyFragment());
 
-//                case 1:
-//                    return (mNoteFragment = new NoteDetailFragment());
-//
-//                case 2:
-//                    return (mWebPageFragment = new WebPageFragment());
+                    // case 1:
+                    // return (mNoteFragment = new NoteDetailFragment());
+                    //
+                    // case 2:
+                    // return (mWebPageFragment = new WebPageFragment());
             }
             return null;
         }
@@ -306,14 +311,15 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void setupSearchMenuItem(Menu menu) {
-//        MenuItem searchItem = menu.findItem(R.id.menu_search);
-//        if (searchItem != null && UIUtils.hasHoneycomb()) {
-//            SearchView searchView = (SearchView) searchItem.getActionView();
-//            if (searchView != null) {
-//                SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-//                searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-//            }
-//        }
+        // MenuItem searchItem = menu.findItem(R.id.menu_search);
+        // if (searchItem != null && UIUtils.hasHoneycomb()) {
+        // SearchView searchView = (SearchView) searchItem.getActionView();
+        // if (searchView != null) {
+        // SearchManager searchManager = (SearchManager)
+        // getSystemService(SEARCH_SERVICE);
+        // searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        // }
+        // }
     }
 
     private void setupAddKeyItem(Menu menu) {
@@ -349,8 +355,8 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
                     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                         // TODO Auto-generated method stub
                         if (actionId == EditorInfo.IME_NULL
-                            /*|| actionId == EditorInfo.IME_ACTION_DONE*/
-                            && event.getAction() == KeyEvent.ACTION_DOWN) {
+                        /* || actionId == EditorInfo.IME_ACTION_DONE */
+                        && event.getAction() == KeyEvent.ACTION_DOWN) {
                             LOGI(TAG, "The key to add is: " + v.getText());
 
                             // when get the key user entered, start
@@ -359,21 +365,23 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
                                                              null,
                                                              tempHomeActivity,
                                                              KeyAddService.class);
-                            keyAddIntent.putExtra(KeyAddService.EXTRA_KEY_NAME, v.getText().toString());
+                            keyAddIntent.putExtra(KeyAddService.EXTRA_KEY_NAME, v.getText()
+                                                                                 .toString());
                             keyAddIntent.putExtra(KeyAddService.EXTRA_KEY_TIME,
                                                   System.currentTimeMillis());
-                            keyAddIntent.putExtra(KeyAddService.EXTRA_STATUS_RECEIVER, mKeyFragment.mReceiver);
+                            keyAddIntent.putExtra(KeyAddService.EXTRA_STATUS_RECEIVER,
+                                                  mKeyFragment.mReceiver);
                             tempHomeActivity.startService(keyAddIntent);
 
-//                            addKeyEditView.clearFocus();
+                            // addKeyEditView.clearFocus();
+                            InputMethodManager imm = (InputMethodManager) getSystemService(tempHomeActivity.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
                             addKeyEditItem.collapseActionView();
                         }
-                        Toast.makeText(tempHomeActivity,
-                                       v.getText() + "--" + actionId,
-                                       Toast.LENGTH_LONG).show();
-                        
-                       InputMethodManager imm = (InputMethodManager)getSystemService(tempHomeActivity.INPUT_METHOD_SERVICE);   
-                       imm.hideSoftInputFromWindow(v.getWindowToken(), 0);    
+                        // Toast.makeText(tempHomeActivity,
+                        // v.getText() + "--" + actionId,
+                        // Toast.LENGTH_LONG).show();
 
                         return true;
                     }

@@ -304,14 +304,14 @@ public class KeyFragment extends SherlockListFragment implements
         switch (resultCode) {
             case KeyAddService.STATUS_ADD_FINISHED: {
                 // TODO update key list
-                Toast.makeText(activity, "STATUS_ADD_FINISHED", Toast.LENGTH_LONG).show();
+//                Toast.makeText(activity, "STATUS_ADD_FINISHED", Toast.LENGTH_LONG).show();
                 LOGI(TAG, "STATUS_ADD_FINISHED");
                 getLoaderManager().restartLoader(0, null, this);
                 break;
             }
             case KeyAddService.STATUS_SEARCH_FINISHED: {
                 // TODO update key list
-                Toast.makeText(activity, "STATUS_SEARCH_FINISHED", Toast.LENGTH_LONG).show();
+//                Toast.makeText(activity, "STATUS_SEARCH_FINISHED", Toast.LENGTH_LONG).show();
                 LOGI(TAG, "STATUS_SEARCH_FINISHED");
                 getLoaderManager().restartLoader(0, null, this);
                 break;
