@@ -141,14 +141,15 @@ public class NoteDetailFragment extends SherlockFragment implements
         LOGI(TAG, "onCreateView()");
         mRootView = (ViewGroup) inflater.inflate(R.layout.fragment_key_detail, null);
 
-        mNameView = (TextView) mRootView.findViewById(R.id.key_name);
-        mTimeView = (TextView) mRootView.findViewById(R.id.key_search_time);
-
-        mNameView.setText(mKeyName);
-        mTimeView.setText(DateUtils.formatDateTime(getActivity(),
-                                                   mkeyTime,
-                                                   DateUtils.FORMAT_SHOW_TIME
-                                                           | DateUtils.FORMAT_12HOUR));
+//        mNameView = (TextView) mRootView.findViewById(R.id.key_name);
+//        mTimeView = (TextView) mRootView.findViewById(R.id.key_search_time);
+//
+//        mNameView.setText(mKeyName);
+//        mTimeView.setText(DateUtils.formatDateTime(getActivity(),
+//                                                   mkeyTime,
+//                                                   DateUtils.FORMAT_SHOW_TIME
+//                                                           | DateUtils.FORMAT_12HOUR));
+        getActivity().setTitle(mKeyName);
 
         if (mVariableHeightHeader) {
             View headerView = mRootView.findViewById(R.id.header_session);
@@ -720,6 +721,7 @@ public class NoteDetailFragment extends SherlockFragment implements
     }
 
     private static String getDomainName(String url) {
+        LOGI(TAG, "getDomainName for " + url);
         URI uri = null;
         try {
             uri = new URI(url);
@@ -729,6 +731,7 @@ public class NoteDetailFragment extends SherlockFragment implements
             e.printStackTrace();
         }
         String domain = uri.getHost();
+        LOGI(TAG, "in getDomainName domain is " + domain);
         return domain.startsWith("www.") ? domain.substring(4) : domain;
     }
 

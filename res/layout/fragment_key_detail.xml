@@ -18,16 +18,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout android:id="@+id/header_session"
+<!--     <RelativeLayout android:id="@+id/header_session"
         android:background="@drawable/session_detail_header_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/content_padding_normal"
+> -->
+
+<!--    
+             android:paddingLeft="@dimen/content_padding_normal"
         android:paddingRight="@dimen/content_padding_normal"
         android:paddingTop="@dimen/content_padding_normal"
-        android:paddingBottom="@dimen/content_padding_normal">
+        android:paddingBottom="@dimen/content_padding_normal" -->
 
-        <TextView android:id="@+id/key_name"
+<!--         <TextView android:id="@+id/key_name"
             android:textIsSelectable="false"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
@@ -35,17 +38,19 @@
             android:layout_height="wrap_content"
              />
         
-        <!-- style="@style/TextHeader" -->
+        style="@style/TextHeader"
 
         <TextView android:id="@+id/key_search_time"
             android:textIsSelectable="false"
             android:layout_below="@id/key_name"
             android:layout_toLeftOf="@id/key_name"
-            android:layout_alignParentLeft="true"
+            
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/TextHeaderSub" />
-    </RelativeLayout>
+         -->
+        <!-- android:layout_alignParentLeft="true" -->
+    <!-- </RelativeLayout> -->
 
     <include layout="@layout/tab_key_search_info" />
 

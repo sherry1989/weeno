@@ -104,12 +104,13 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
             mViewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.page_margin_width));
 
             final ActionBar actionBar = getSupportActionBar();
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);        //disable tabs in ActionBar
             actionBar.addTab(actionBar.newTab().setText(R.string.title_key).setTabListener(this));
 //            actionBar.addTab(actionBar.newTab().setText(R.string.title_note).setTabListener(this));
-            actionBar.addTab(actionBar.newTab()
-                                      .setText(R.string.title_webpage)
-                                      .setTabListener(this));
+//            actionBar.addTab(actionBar.newTab()
+//                                      .setText(R.string.title_webpage)
+//                                      .setTabListener(this));
 
             homeScreenLabel = getString(R.string.title_key);
 
@@ -217,12 +218,12 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
             case 0:
                 titleId = R.string.title_key;
                 break;
-            case 1:
+//            case 1:
 //                titleId = R.string.title_note;
 //                break;
 //            case 2:
-                titleId = R.string.title_webpage;
-                break;
+//                titleId = R.string.title_webpage;
+//                break;
         }
 
         String title = getString(titleId);
@@ -276,18 +277,18 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
                 case 0:
                     return (mKeyFragment = new KeyFragment());
 
-                case 1:
+//                case 1:
 //                    return (mNoteFragment = new NoteDetailFragment());
 //
 //                case 2:
-                    return (mWebPageFragment = new WebPageFragment());
+//                    return (mWebPageFragment = new WebPageFragment());
             }
             return null;
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return 1;
         }
     }
 
@@ -303,14 +304,14 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void setupSearchMenuItem(Menu menu) {
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
-        if (searchItem != null && UIUtils.hasHoneycomb()) {
-            SearchView searchView = (SearchView) searchItem.getActionView();
-            if (searchView != null) {
-                SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-                searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-            }
-        }
+//        MenuItem searchItem = menu.findItem(R.id.menu_search);
+//        if (searchItem != null && UIUtils.hasHoneycomb()) {
+//            SearchView searchView = (SearchView) searchItem.getActionView();
+//            if (searchView != null) {
+//                SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+//                searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//            }
+//        }
     }
 
     private void setupAddKeyItem(Menu menu) {
