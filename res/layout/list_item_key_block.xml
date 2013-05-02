@@ -52,7 +52,7 @@
         <!-- android:foreground="?activatableItemBackground" -->
 
         <TextView android:id="@+id/key_name"
-            android:textIsSelectable="true"
+            android:textIsSelectable="false"
             android:layout_toRightOf="@id/key_time_container"
             android:layout_alignParentRight="true"
             android:layout_width="0dp"
