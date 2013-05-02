@@ -388,6 +388,18 @@ public class KeyFragment extends SherlockListFragment implements
             {
                 LOGI(TAG, "keyState equals KeysQuery.NEED_SEARCH");
                 extraButton.setVisibility(View.GONE);
+                
+                // when get not finished search key, start
+                // KeyAddService to search for the key
+                Intent keySearchIntent = new Intent(KeyAddService.ACTION_SEARCH_KEY,
+                                                 null,
+                                                 context,
+                                                 KeyAddService.class);
+                keySearchIntent.putExtra(KeyAddService.EXTRA_KEY_NAME, keyName);
+                keySearchIntent.putExtra(KeyAddService.EXTRA_KEY_ID, keyId);
+                keySearchIntent.putExtra(KeyAddService.EXTRA_STATUS_RECEIVER,
+                                      mReceiver);
+                context.startService(keySearchIntent);
             }
             else if (keyState.equals(KeysQuery.COMPLETE_SEARCH))
             {

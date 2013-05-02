@@ -55,9 +55,11 @@ public class KeyAddService extends IntentService {
     private static final String TAG                    = makeLogTag(KeyAddService.class);
 
     public static final String  ACTION_ADD_KEY         = "com.qian.weenoo.action.ADD_KEY";
+    public static final String  ACTION_SEARCH_KEY      = "com.qian.weenoo.action.SEARCH_KEY";
     public static final String  EXTRA_KEY_NAME         = "com.qian.weenoo.extra.KEY_NAME";
     public static final String  EXTRA_KEY_TIME         = "com.qian.weenoo.extra.KEY_TIME";
     public static final String  EXTRA_STATUS_RECEIVER  = "com.qian.weenoo.extra.STATUS_RECEIVER";
+    public static final String  EXTRA_KEY_ID         = "com.qian.weenoo.extra.KEY_ID";
 
     public static final int     STATUS_ERROR           = 0x1;
     public static final int     STATUS_ADD_FINISHED    = 0x2;
@@ -98,8 +100,7 @@ public class KeyAddService extends IntentService {
         /**
          * get the key user entered to search, first, add the key to the
          * database, and show the key list in the {@link KeyFragment}, second,
-         * send request to the server to search the key and insert key related
-         * information to database, third, update the key's state.
+         * try to connect the server and search for the key.
          */
         if (ACTION_ADD_KEY.equals(action)) {
             final String keyName = intent.getStringExtra(KeyAddService.EXTRA_KEY_NAME);
@@ -113,68 +114,87 @@ public class KeyAddService extends IntentService {
                 receiver.send(STATUS_ADD_FINISHED, Bundle.EMPTY);
             }
 
-            if (getNetworkConnectivity()) {
-
-                // --step 2.1. send request to the server to search the key and
-                // insert key related information to database
-                try {
-                    final ContentResolver resolver = mContext.getContentResolver();
-                    ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
-
-                    SearchKeyResponse response = getResForKey(keyName);
-                    batch.addAll(new ImagesHandler().process(response.imageInfos, keyId));
-                    batch.addAll(new WebsHandler().process(response.webInfos, keyId));
-
-                    try {
-                        // Apply all queued up batch operations for local data.
-                        resolver.applyBatch(NoteContract.CONTENT_AUTHORITY, batch);
-                    }
-                    catch (RemoteException e) {
-                        throw new RuntimeException("Problem applying batch operation", e);
-                    }
-                    catch (OperationApplicationException e) {
-                        throw new RuntimeException("Problem applying batch operation", e);
-                    }
-                }
-                catch (IOException e) {
-                    // TODO Auto-generated catch block
-
-                    LOGE(TAG, "Get Error when sending request to server for key " + keyName);
-
-                    if (receiver != null) {
-                        // Pass back error to surface listener
-                        final Bundle bundle = new Bundle();
-                        bundle.putString(Intent.EXTRA_TEXT, e.toString());
-                        receiver.send(STATUS_ERROR, bundle);
-                    }
-
-                    e.printStackTrace();
-                }
-
-                // --step 2.2. update the key's state
-                updateKey(keyId);
-                LOGI(TAG, "Finish update key, keyId is " + keyId);
-
-                if (receiver != null) {
-                    receiver.send(STATUS_SEARCH_FINISHED, Bundle.EMPTY);
-                }
-
-                return;
-            }
-
-            else {
-                LOGI(TAG, "Cannot search key because of disconnect to internet, keyId is " + keyId);
-
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(new Runnable() {
-                    public void run() {
-                        Toast.makeText(mContext, "Cannot connect to internet", Toast.LENGTH_LONG)
-                             .show();
-                    }
-                });
-            }
+            // --step 2. try to connect the server and search for the key
+            tryToSearchForKey(keyName, keyId, receiver);
         }
 
+        else if (ACTION_SEARCH_KEY.equals(action)) {
+            final String keyName = intent.getStringExtra(KeyAddService.EXTRA_KEY_NAME);
+            final String keyId = intent.getStringExtra(KeyAddService.EXTRA_KEY_ID);
+            tryToSearchForKey(keyName, keyId, receiver);
+        }
+
+    }
+
+    /**
+     * try to connect the server and search for the key, first, check the
+     * network connectivity, if is connected to the network, first, send request
+     * to the server to search the key and insert key related information to
+     * database, and then, update the key's state, if is not connected to the
+     * network, just show a toast to the user
+     */
+    private void tryToSearchForKey(String keyName, String keyId, ResultReceiver receiver) {
+        // TODO Auto-generated method stub
+        if (getNetworkConnectivity()) {
+
+            // --step 1. send request to the server to search the key and
+            // insert key related information to database
+            try {
+                final ContentResolver resolver = mContext.getContentResolver();
+                ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
+
+                SearchKeyResponse response = getResForKey(keyName);
+                batch.addAll(new ImagesHandler().process(response.imageInfos, keyId));
+                batch.addAll(new WebsHandler().process(response.webInfos, keyId));
+
+                try {
+                    // Apply all queued up batch operations for local data.
+                    resolver.applyBatch(NoteContract.CONTENT_AUTHORITY, batch);
+                }
+                catch (RemoteException e) {
+                    throw new RuntimeException("Problem applying batch operation", e);
+                }
+                catch (OperationApplicationException e) {
+                    throw new RuntimeException("Problem applying batch operation", e);
+                }
+            }
+            catch (IOException e) {
+                // TODO Auto-generated catch block
+
+                LOGE(TAG, "Get Error when sending request to server for key " + keyName);
+
+                if (receiver != null) {
+                    // Pass back error to surface listener
+                    final Bundle bundle = new Bundle();
+                    bundle.putString(Intent.EXTRA_TEXT, e.toString());
+                    receiver.send(STATUS_ERROR, bundle);
+                }
+
+                e.printStackTrace();
+            }
+
+            // --step 2. update the key's state
+            updateKey(keyId);
+            LOGI(TAG, "Finish update key, keyId is " + keyId);
+
+            if (receiver != null) {
+                receiver.send(STATUS_SEARCH_FINISHED, Bundle.EMPTY);
+            }
+
+            return;
+        }
+
+        else {
+            LOGI(TAG, "Cannot search key because of disconnect to internet, keyId is " + keyId);
+
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                public void run() {
+                    Toast.makeText(mContext, "Cannot connect to internet", Toast.LENGTH_LONG)
+                         .show();
+                }
+            });
+        }
     }
 
     private boolean getNetworkConnectivity() {
