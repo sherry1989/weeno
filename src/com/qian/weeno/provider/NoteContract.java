@@ -104,7 +104,7 @@ public class NoteContract {
 
         /** Default "ORDER BY" clause. */
         public static final String DEFAULT_SORT = KeysColumns.KEY_SEARCH_TIME
-                + " COLLATE NOCASE ASC";
+                + " COLLATE NOCASE DESC";
 
         /** Build {@link Uri} for requested {@link #KEY_ID}. */
         public static Uri buildKeyUri(String keyId) {
