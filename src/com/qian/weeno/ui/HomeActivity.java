@@ -324,31 +324,14 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
 
     private void setupAddKeyItem(Menu menu) {
         final MenuItem addKeyEditItem = menu.findItem(R.id.menu_add_key);
+        final HomeActivity tempHomeActivity = this;
         if (addKeyEditItem != null) {
             final EditText addKeyEditView = (EditText) addKeyEditItem.getActionView();
             if (addKeyEditView != null) {
-                addKeyEditView.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        // TODO Auto-generated method stub
-
-                    }
-
-                });
-
-                final HomeActivity tempHomeActivity = this;
+                
+                addKeyEditView.requestFocus();
+                
+               
 
                 addKeyEditView.setOnEditorActionListener(new OnEditorActionListener() {
                     @Override
@@ -374,6 +357,8 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
                             tempHomeActivity.startService(keyAddIntent);
 
                             // addKeyEditView.clearFocus();
+                            addKeyEditView.setText("");
+                            
                             InputMethodManager imm = (InputMethodManager) getSystemService(tempHomeActivity.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
@@ -401,6 +386,9 @@ public class HomeActivity extends BaseActivity implements ActionBar.TabListener,
                 public boolean onMenuItemActionExpand(MenuItem item) {
                     // addKeyEditView.clearFocus();
                     LOGI(TAG, "onMenuItemActionExpand");
+                    addKeyEditView.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(tempHomeActivity.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
                     return true; // Return true to expand action view
                 }
             });
