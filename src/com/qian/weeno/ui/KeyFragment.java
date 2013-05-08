@@ -9,6 +9,7 @@ import com.qian.weeno.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import android.app.Activity;
 import android.content.Context;
@@ -394,6 +395,7 @@ public class KeyFragment extends SherlockListFragment implements
             
             UIUtils.setActivatedCompat(primaryTouchTargetView, false);
 
+            TimeZone.setDefault(TimeZone.getTimeZone("Asia/Shanghai"));
             timeView.setText(DateUtils.formatDateTime(context,
                                                       keyTime,
                                                       DateUtils.FORMAT_SHOW_TIME
