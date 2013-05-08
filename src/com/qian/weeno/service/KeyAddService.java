@@ -258,6 +258,7 @@ public class KeyAddService extends IntentService {
         LOGI(TAG, "Geting from URL: " + url);
 
         urlConnection.connect();
+        urlConnection.setReadTimeout(360000);
         throwErrors(urlConnection);
         String json = readInputStream(urlConnection.getInputStream());
         return new Gson().fromJson(json, SearchKeyResponse.class);

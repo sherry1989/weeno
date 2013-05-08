@@ -253,6 +253,7 @@ public class ImageFetcher extends ImageWorker {
         try {
             final URL url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setReadTimeout(360000);
             if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 return null;
             }
@@ -304,6 +305,7 @@ public class ImageFetcher extends ImageWorker {
         try {
             final URL url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setReadTimeout(360000);
             in = new BufferedInputStream(urlConnection.getInputStream(), IO_BUFFER_SIZE_BYTES);
             out = new BufferedOutputStream(outputStream, IO_BUFFER_SIZE_BYTES);
 
@@ -354,6 +356,7 @@ public class ImageFetcher extends ImageWorker {
 
             final URL url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setReadTimeout(360000);
             if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                 return null;
             }

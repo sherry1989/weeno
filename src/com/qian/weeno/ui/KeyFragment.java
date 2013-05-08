@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.BaseColumns;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
@@ -353,7 +354,7 @@ public class KeyFragment extends SherlockListFragment implements
         }
 
         @Override
-        public void bindView(View view, Context context, final Cursor cursor) {
+        public void bindView(View view, final Context context, final Cursor cursor) {
             LOGI(TAG, "bindView()");
             
             final String keyId = cursor.getString(KeysQuery.KEY_ID);
@@ -370,7 +371,27 @@ public class KeyFragment extends SherlockListFragment implements
 
             final Resources res = getResources();
 
-            primaryTouchTargetView.setOnLongClickListener(null);
+            primaryTouchTargetView.setOnLongClickListener(new View.OnLongClickListener() {
+                
+                @Override
+                public boolean onLongClick(View v) {
+                    // TODO Auto-generated method stub
+                    LOGI(TAG, "primaryTouchTargetView.onLongClick()");
+                    deleteKey(keyId);
+                    Toast.makeText(getActivity(), "Finish deleting key " + keyName, Toast.LENGTH_LONG).show();
+//                    getLoaderManager().restartLoader(0, null, (LoaderCallbacks<Cursor>) context);
+                    notifyDataSetChanged();
+                    return true;
+                }
+
+                private int deleteKey(String keyId) {
+                    // TODO Auto-generated method stub
+                    Uri keyURI = NoteContract.addCallerIsSyncAdapterParameter(NoteContract.Keys.buildKeyUriForState(keyId));
+                    LOGI(TAG, "delete key URI is " + keyURI);
+                    return context.getContentResolver().delete(keyURI, null, null);
+                }
+            });
+            
             UIUtils.setActivatedCompat(primaryTouchTargetView, false);
 
             timeView.setText(DateUtils.formatDateTime(context,
